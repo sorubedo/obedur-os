@@ -8,6 +8,10 @@ base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia-open
 image-version: 43
 
 modules:
+  - type: kargs
+    kargs:
+      - rd.luks.options=fido2-device=auto
+
   - type: script
     scripts:
       - add-terra.sh
