@@ -62,6 +62,8 @@ modules:
         - firefox-langpacks
         - fuzzel
         - alacritty
+        - nvtop
+        - htop
 
   - type: default-flatpaks
     configurations:
