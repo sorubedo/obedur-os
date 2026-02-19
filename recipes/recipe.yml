@@ -35,6 +35,7 @@ modules:
     install:
       packages:
         - firewalld
+        - firewall-config
         - pam-u2f
         - starship
         - fastfetch
