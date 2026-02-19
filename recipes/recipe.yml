@@ -31,6 +31,7 @@ modules:
         - atim/resources
         - leloubil/wl-clip-persist
         - lemmy/favorites
+        - yselkowitz/nwg-shell
     install:
       packages:
         - pam-u2f
@@ -52,18 +53,15 @@ modules:
         - quickshell
         - dae
         - fcitx5-chinese-addons
+        - adw-gtk3-theme
+        - nwg-look
     remove:
       packages:
         - firefox
         - firefox-langpacks
+        - fuzzel
+        - alacritty
 
-  - type: default-flatpaks
-    configurations:
-      - notify: true
-        scope: user
-        install:
-          - io.github.flattool.Warehouse
-          - com.github.tchx84.Flatseal
   - type: systemd
     system:
       enabled:
