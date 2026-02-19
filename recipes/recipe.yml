@@ -11,6 +11,7 @@ modules:
   - type: script
     scripts:
       - add-terra.sh
+      - add-dracut-modules.sh
   - type: files
     files:
       - source: system
@@ -88,3 +89,4 @@ modules:
         - greetd.service
         - firewalld.service
   - type: signing
+  - type: initramfs
