@@ -34,6 +34,7 @@ modules:
         - yselkowitz/nwg-shell
     install:
       packages:
+        - firewalld
         - pam-u2f
         - starship
         - fastfetch
@@ -82,4 +83,5 @@ modules:
     system:
       enabled:
         - greetd.service
+        - firewalld.service
   - type: signing
