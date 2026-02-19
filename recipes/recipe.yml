@@ -55,6 +55,7 @@ modules:
         - fcitx5-chinese-addons
         - adw-gtk3-theme
         - nwg-look
+        - bibata-cursor-theme
     remove:
       packages:
         - firefox
