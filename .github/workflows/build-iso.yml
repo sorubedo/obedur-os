@@ -1,0 +1,48 @@
+name: Build ISO
+on:
+  workflow_dispatch: # 允许你在 GitHub 网页端手动点击按钮触发
+
+env:
+  # 根据你的 recipe.yml 和 README.md 配置
+  IMAGE_NAME: obedur-os
+  IMAGE_REPO: ghcr.io/sorubedo
+  IMAGE_TAG: latest
+  VERSION: 43 # 对应 recipe.yml 中的 image-version
+  VARIANT: Kinoite # 安装向导使用的底座，Kinoite/Silverblue 均可，这不影响你最终安装的 Niri 桌面
+  ARCH: x86_64
+
+jobs:
+  build-iso:
+    name: Build ISO
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Build ISO
+        uses: jasonn3/build-container-installer@main
+        id: build
+        with:
+          arch: ${{ env.ARCH }}
+          image_name: ${{ env.IMAGE_NAME }}
+          image_repo: ${{ env.IMAGE_REPO }}
+          image_tag: ${{ env.IMAGE_TAG }}
+          version: ${{ env.VERSION }}
+          variant: ${{ env.VARIANT }}
+          iso_name: ${{ env.IMAGE_NAME }}-${{ env.IMAGE_TAG }}-${{ env.VERSION }}.iso
+
+      - name: Upload ISO as artifact
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.iso_name }}
+          path: |
+            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}
+            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM
+          if-no-files-found: error
+          # 建议保留天数设置得短一点（比如 3 天），下载完就可以让 GitHub 自动清理，以节省空间
+          retention-days: 3
+          compression-level: 0
