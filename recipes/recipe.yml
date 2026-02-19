@@ -30,6 +30,7 @@ modules:
         - zhullyb/v2rayA
         - atim/resources
         - leloubil/wl-clip-persist
+        - lemmy/favorites
     install:
       packages:
         - pam-u2f
@@ -37,6 +38,10 @@ modules:
         - fastfetch
         - tuigreet
         - niri
+        - ghostty
+        - grim
+        - slurp
+        - satty
         - wl-clip-persist
         - noctalia-shell
         - kvantum

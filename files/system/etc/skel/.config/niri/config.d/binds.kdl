@@ -15,7 +15,7 @@ binds {
     Mod+T { spawn "ghostty"; }
     Ctrl+Alt+T { spawn "ghostty"; }
     Mod+B { spawn "google-chrome-stable"; }
-    Mod+E { spawn "pcmanfm-qt"; }
+    Mod+E { spawn "nautilus"; }
     Mod+Escape { spawn "resources"; }
     
     // Quickshell (Noctalia) IPC 集成
