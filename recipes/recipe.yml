@@ -15,7 +15,7 @@ modules:
     files:
       - source: system
         destination: /
-  
+
   - type: fonts
     fonts:
       url-fonts:
@@ -56,6 +56,7 @@ modules:
         - adw-gtk3-theme
         - nwg-look
         - bibata-cursor-theme
+        - xdg-user-dirs
 
   - type: dnf
     remove:
@@ -66,6 +67,8 @@ modules:
         - alacritty
         - nvtop
         - htop
+        - swaylock
+        - waybar
 
   - type: default-flatpaks
     configurations:
@@ -79,5 +82,4 @@ modules:
     system:
       enabled:
         - greetd.service
-        - dae.service
   - type: signing
