@@ -63,6 +63,14 @@ modules:
         - fuzzel
         - alacritty
 
+  - type: default-flatpaks
+    configurations:
+      - notify: true
+        scope: user
+        install:
+          - io.github.flattool.Warehouse
+          - com.github.tchx84.Flatseal
+
   - type: systemd
     system:
       enabled:
