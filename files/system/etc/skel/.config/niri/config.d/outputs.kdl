@@ -1,0 +1,89 @@
+// 输出设备配置
+// 文档:https://yalter.github.io/niri/Configuration%3A-Outputs.html
+// 运行 `niri msg outputs` 可以列出所有连接的输出设备及其名称。
+// 常见的笔记本内屏通常叫 "eDP-1"。
+
+// 示例配置块（取消注释 "/-" 来启用）：
+/-output "eDP-1" {
+    // 关闭此输出设备。
+    // off
+
+    // 设置分辨率和刷新率。
+    // 格式为 "<width>x<height>" 或 "<width>x<height>@<refresh rate>"。
+    // 如果省略刷新率，niri 会选择该分辨率下的最高刷新率。
+    // 如果整个 mode 都省略，niri 会自动选择一个。
+    mode "1920x1080@120.030"
+
+    // 设置 UI 缩放比例。支持整数或小数。
+    // 例如 1.5 代表 150% 缩放。
+    scale 2.0
+
+    // 旋转或翻转输出。
+    // 可选值: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270"。
+    transform "normal"
+
+    // 设置输出在全局坐标空间中的位置。
+    // 这会影响 "focus-monitor-left" 等方向性操作以及鼠标移动。
+    // 必须考虑缩放和旋转后的逻辑像素大小。
+    // 例如，3840x2160 缩放 2.0 后逻辑大小为 1920x1080。
+    // 如果不设置或导致重叠，niri 会自动放置。
+    position x=1280 y=0
+
+    // 启用可变刷新率 (VRR/G-Sync/FreeSync)。
+    // 只有当显示器支持时才有效。
+    // variable-refresh-rate
+    // 也可以设置为按需开启（仅当全屏应用符合规则时开启）。
+    // variable-refresh-rate on-demand=true
+
+    // 启动时聚焦此显示器。
+    // focus-at-startup
+
+    // 设置此输出的背景色（在工作区之间或概览视图中可见）。
+    // 忽略 Alpha 通道。
+    // backdrop-color "#000000"
+
+    // 自定义此输出的热角行为。
+    // 默认使用全局设置。设置为 off 禁用，或指定特定角落。
+    // hot-corners {
+    //     top-left
+    //     // top-right
+    //     // bottom-left
+    //     // bottom-right
+    // }
+
+    // 针对此输出覆盖全局布局设置。
+    // 可以包含任何顶层 layout {} 块中的选项。
+    // layout {
+    //     default-column-width { proportion 1.0; }
+    //     gaps 0
+    // }
+}
+
+output "eDP-1" {
+    mode "2560x1600@240"
+
+    scale 1.5
+
+    transform "normal"
+    position x=0 y=0
+
+    variable-refresh-rate
+
+    focus-at-startup
+
+    hot-corners {
+        bottom-left
+    }
+}
+
+output "HDMI-A-5" {
+    mode "1920x1080@60"
+    scale 1.125
+
+    transform "normal"
+    position x=1707 y=853
+
+    hot-corners {
+        bottom-right
+    }
+}

@@ -1,0 +1,135 @@
+layout {
+    // 设置窗口周围的间隙（逻辑像素）。
+    gaps 8
+
+    // 在改变焦点时何时居中列。
+    // "never": 从不居中，保持在屏幕边缘。
+    // "always": 总是居中聚焦的列。
+    // "on-overflow": 仅当列无法完全显示时才居中。
+    center-focused-column "never"
+    
+    // 始终将单个列居中显示（无论 center-focused-column 如何设置）。
+    // always-center-single-column
+
+    // 在第一个工作区之前添加一个空工作区（默认只在最后添加）。
+    // empty-workspace-above-first
+
+    // 设置新列的默认显示模式。
+    // "normal": 正常平铺。
+    // "tabbed": 标签页式显示（垂直堆叠）。
+    // default-column-display "normal"
+
+    // 自定义 "switch-preset-column-width" (Mod+R) 切换的预设宽度。
+    preset-column-widths {
+        // proportion: 屏幕宽度的比例 (0.0 - 1.0)。
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+        proportion 1.0
+        
+        // fixed: 固定逻辑像素宽度。
+        // fixed 1920
+    }
+
+    // 自定义 "switch-preset-window-height" (Mod+Shift+R) 切换的预设高度。
+    preset-window-heights { 
+        // proportion 0.33333
+        proportion 0.5
+        // proportion 0.66667
+        proportion 1.0
+        // fixed 1080
+    }
+
+    // 设置新窗口的默认宽度。
+    default-column-width { proportion 0.5; }
+    // 如果留空，窗口将自行决定初始宽度。
+    // default-column-width {}
+
+    // 焦点环配置 (指示当前活动窗口)
+    focus-ring {
+        // off // 取消注释以禁用
+
+        // 环的宽度（逻辑像素）。
+        width 4
+
+        // 颜色设置 (由 noctalia.kdl 接管)
+        // active-color "#7fc8ff"
+        // inactive-color "#505050"
+        
+        // 渐变色示例 (优先级高于纯色)
+        // active-gradient from="#80c8ff" to="#c7ff7f" angle=45
+        
+        // 相对于工作区视图的渐变
+        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+    }
+
+    // 边框配置 (始终围绕窗口显示)
+    border {
+        // 如果启用了边框，通常会禁用焦点环。
+        off
+
+        width 2
+        // 颜色设置 (由 noctalia.kdl 接管)
+        // active-color "#ffc87f"
+        // inactive-color "#505050"
+        // urgent-color "#9b0000"
+    }
+
+    // 阴影配置
+    shadow {
+        // off // 取消注释以禁用
+        // on  // 取消注释以启用（默认可能关闭）
+
+        softness 30       // 模糊半径
+        spread 5          // 扩展大小
+        offset x=0 y=5    // 偏移量
+        // 颜色设置 (由 noctalia.kdl 接管)
+        // color "#00000070" 
+        
+        // 在非活动窗口上的阴影颜色
+        // inactive-color "#00000054"
+
+        // 在窗口后方绘制阴影（修复部分透明窗口的视觉伪影，但可能影响性能或外观）
+        // draw-behind-window true
+    }
+    
+    // 标签页指示器配置 (当列处于 tabbed 模式时显示)
+    tab-indicator {
+        // off // 禁用指示器
+        
+        // 当列中只有一个标签时隐藏指示器
+        // hide-when-single-tab
+
+        // 将指示器放在列内（而不是列外）
+        // place-within-column
+
+        // gap 5            // 与窗口的间距
+        // width 4          // 指示器宽度
+        // length total-proportion=1.0 // 长度比例
+        // position "left"  // 位置: "left", "right", "top", "bottom"
+        // corner-radius 0  // 圆角半径
+
+        // 颜色设置 (由 noctalia.kdl 接管)
+        // active-color "#7fc8ff"
+        // inactive-color "#505050"
+    }
+    
+    // 插入位置提示 (拖拽窗口时显示的提示线)
+    insert-hint {
+        // off // 禁用
+        // color "#7fc8ff80"
+        // gradient ...
+    }
+
+    // Struts (类似于外部间隙，或保留区域)
+    // 这里的设置会缩小窗口可用的工作区区域。
+    struts {
+        // left 64
+        // right 64
+        // top 64
+        // bottom 64
+    }
+    
+    // 工作区背景颜色 (Noctalia 方案 2 要求透明)
+    background-color "transparent"
+}

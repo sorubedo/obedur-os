@@ -1,0 +1,20 @@
+// 开关事件配置
+// 文档: https://yalter.github.io/niri/Configuration:-Switch-Events
+// 这里的动作即使在屏幕锁定时也会执行。
+// 目前仅支持 spawn 和 spawn-sh 动作。
+
+switch-events {
+    // 笔记本盖子关闭事件
+    // niri 会自动处理内部显示器的开关，这里可以添加额外动作。
+    // lid-close { spawn "swaylock"; }
+
+    // 笔记本盖子打开事件
+    // lid-open { spawn "notify-send" "盖子已打开"; }
+
+    // 平板模式开启 (通常指键盘鼠标被禁用时)
+    // 可以在这里启用屏幕键盘
+    // tablet-mode-on { spawn "gsettings" "set" "org.gnome.desktop.a11y.applications" "screen-keyboard-enabled" "true"; }
+
+    // 平板模式关闭
+    // tablet-mode-off { spawn "gsettings" "set" "org.gnome.desktop.a11y.applications" "screen-keyboard-enabled" "false"; }
+}

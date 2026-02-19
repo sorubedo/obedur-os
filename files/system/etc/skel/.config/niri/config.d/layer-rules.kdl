@@ -1,0 +1,35 @@
+// 层级规则配置 (Layer Rules)
+// 文档: https://yalter.github.io/niri/Configuration:-Layer-Rules
+// 类似于 window-rule，但用于 Layer Shell 表面（如面板、壁纸、锁屏、通知等）。
+
+// 匹配条件:
+// match namespace=r#"正则"# : 匹配命名空间 (例如 "waybar", "rofi")
+// match id=r#"正则"#        : 匹配 ID (较少使用)
+// match at-startup=true     : 仅在启动时匹配
+
+// ============================================================
+// Noctalia 壁纸配置 (方案 2)
+// ============================================================
+layer-rule {
+    match namespace="^noctalia-wallpaper*"
+    place-within-backdrop true
+}
+
+// 示例：在录屏中屏蔽 Waybar
+/-layer-rule {
+    match namespace="waybar"
+    block-out-from "screencast" // 可选: "screen-capture" (全部屏蔽), "screencast" (仅录屏)
+}
+
+// 示例：为特定层级表面设置阴影的圆角半径
+// 注意：这只影响 niri 绘制的阴影，不裁剪内容。
+/-layer-rule {
+    match namespace="rofi"
+    geometry-corner-radius 12
+}
+
+// 示例：在启动时将特定 Layer Shell 放在特定输出
+// layer-rule {
+//     match at-startup=true namespace="waybar"
+//     open-on-output "HDMI-A-1"
+// }

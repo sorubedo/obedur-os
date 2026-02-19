@@ -2,3 +2,4 @@ cosign.key
 cosign.private
 /Containerfile
 .vscode/settings.json
+/.bluebuild-scripts_*

@@ -1,0 +1,20 @@
+// 调试选项配置
+// 文档: https://yalter.github.io/niri/Configuration:-Debug-Options
+// 这些选项主要用于开发和调试，通常不需要修改。
+
+debug {
+    // 渲染每一帧时，用半透明红色覆盖受损区域，用半透明蓝色覆盖不透明区域。
+    // enable-overlay
+
+    // 禁用直接扫描输出 (Direct Scanout)。
+    // disable-direct-scanout
+
+    // 等待帧完成后再排队下一帧。可能会降低输入延迟，但会增加掉帧风险。
+    // wait-for-frame-completion-before-queueing
+
+    // 即使在合上盖子时也保持笔记本内屏开启。
+    // keep-laptop-panel-on-when-lid-is-closed
+    
+    // 允许 Noctalia 的通知动作和窗口激活
+    honor-xdg-activation-with-invalid-serial
+}

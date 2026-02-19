@@ -1,0 +1,15 @@
+// 启动项配置
+// 文档: https://yalter.github.io/niri/Configuration:-Miscellaneous
+
+// 启动时运行程序
+// 使用 spawn-at-startup 运行普通程序。
+// spawn-at-startup "alacritty"
+
+// 使用 spawn-sh-at-startup 运行 Shell 命令 (支持管道、变量等)。
+// spawn-sh-at-startup "swaybg -i ~/Pictures/wallpaper.png"
+
+// spawn-at-startup "dbus-update-activation-environment" "--all"
+// spawn-at-startup "/usr/libexec/polkit-mate-authentication-agent-1"
+spawn-at-startup "wl-clip-persist" "--clipboard" "regular" "--reconnect-tries" "0"
+spawn-at-startup "qs" "-c" "noctalia-shell"
+spawn-at-startup "fcitx5" "-d"

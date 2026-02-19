@@ -1,0 +1,91 @@
+// 窗口规则配置
+// 文档: https://yalter.github.io/niri/Configuration:-Window-Rules
+
+// niri msg pick-window
+// 匹配条件说明:
+// match app-id=r#"正则"#  : 匹配应用 ID
+// match title=r#"正则"#   : 匹配窗口标题
+// match at-startup=true   : 仅在启动后 60 秒内匹配
+// match is-active=true    : 匹配当前活动窗口
+// match is-focused=true   : 匹配拥有键盘焦点的窗口
+// match is-floating=true  : 匹配浮动窗口
+// match is-urgent=true    : 匹配请求注意的窗口
+
+// ============================================================
+// Noctalia 推荐配置
+// ============================================================
+window-rule {
+    // 圆角设置，提供现代外观
+    geometry-corner-radius 20
+    // 将窗口内容裁剪到圆角边界
+    clip-to-geometry true
+}
+
+// ============================================================
+// 全属性参考示例 (默认注释，请按需复制使用)
+// ============================================================
+/-window-rule {
+    // 匹配 Firefox 且标题包含 "Gmail"
+    match app-id="firefox" title="Gmail"
+    
+    // 打开时的行为
+    open-on-output "eDP-1"        // 在指定显示器打开
+    // open-on-workspace "Web"    // 在指定工作区打开 (需先定义工作区名称)
+    open-floating true            // 以浮动模式打开
+    open-focused false            // 打开时不自动获取焦点
+    open-maximized true           // 以最大化列打开
+    open-fullscreen true          // 以全屏打开
+    
+    // 尺寸限制 (逻辑像素)
+    default-column-width { fixed 1000; } // 默认列宽
+    default-window-height { fixed 800; } // 默认窗口高度
+    min-width 400
+    max-width 1200
+    min-height 300
+    max-height 900
+    
+    // 浮动窗口属性
+    default-floating-position x=100 y=100 relative-to="top-left"
+    
+    // 外观与行为
+    opacity 0.9                   // 不透明度 (0.0 - 1.0)
+    clip-to-geometry true         // 裁剪内容到几何形状 (配合圆角)
+    geometry-corner-radius 12     // 圆角半径
+    
+    // 屏蔽录屏/截图 (可选: "screencast", "screen-capture", "none")
+    block-out-from "screen-capture" 
+    
+    // 覆盖全局外观配置
+    draw-border-with-background false
+    focus-ring { 
+        width 2 
+        active-color "#ff0000" 
+    }
+    border { 
+        off 
+    }
+    shadow { 
+        on 
+        color "#00000080" 
+    }
+    tab-indicator {
+        hide-when-single-tab true
+    }
+    
+    // 其他
+    variable-refresh-rate true    // 允许 VRR
+    scroll-factor 1.5             // 滚动速度倍率
+}
+
+// ============================================================
+// 实际生效的规则
+// ============================================================
+window-rule {
+    match app-id="pcmanfm-qt"
+    open-floating true            // 以浮动模式打开
+}
+
+window-rule {
+    match app-id="Waydroid"
+    open-fullscreen true          // 以全屏打开
+}

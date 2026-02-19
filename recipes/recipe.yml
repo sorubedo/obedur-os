@@ -8,23 +8,49 @@ base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia-open
 image-version: 43
 
 modules:
+  - type: script
+    scripts:
+      - add-terra.sh
   - type: files
     files:
       - source: system
         destination: /
+  
+  - type: fonts
+    fonts:
+      url-fonts:
+        - name: MapleMono-NF-CN-unhinted
+          url: https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN-unhinted.zip
 
   - type: dnf
     repos:
       copr:
         - atim/starship
+        - errornointernet/quickshell
+        - zhullyb/v2rayA
+        - atim/resources
+        - leloubil/wl-clip-persist
     install:
       packages:
-        - micro
+        - pam-u2f
         - starship
-    # remove:
-    #   packages:
-    #     - firefox
-    #     - firefox-langpacks
+        - fastfetch
+        - tuigreet
+        - niri
+        - wl-clip-persist
+        - noctalia-shell
+        - kvantum
+        - resources
+        - mate-polkit
+        - nautilus
+        - blueman
+        - quickshell
+        - dae
+        - fcitx5-chinese-addons
+    remove:
+      packages:
+        - firefox
+        - firefox-langpacks
 
   - type: default-flatpaks
     configurations:
@@ -33,5 +59,9 @@ modules:
         install:
           - io.github.flattool.Warehouse
           - com.github.tchx84.Flatseal
-
+  - type: systemd
+    system:
+      enabled:
+        - greetd.service
+        - dae.service
   - type: signing

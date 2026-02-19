@@ -1,0 +1,14 @@
+// 最近窗口切换器配置 (Alt-Tab)
+// 文档: https://yalter.github.io/niri/Configuration:-Recent-Windows
+
+// 默认不启用，需要在 binds 中绑定按键。
+// 这里的配置块用于调整切换器的行为。
+
+// recent-windows {
+    // 禁用最近窗口切换器
+    // off
+// }
+
+// 相关按键绑定示例 (请添加到 binds.kdl):
+// Mod+Tab { focus-window-previous-in-stack; }
+// Mod+Shift+Tab { focus-window-next-in-stack; }
