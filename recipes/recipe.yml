@@ -78,6 +78,12 @@ modules:
         - htop
         - swaylock
         - waybar
+        - ibus
+        - ibus-chewing
+        - ibus-setup
+        - ibus-gtk3
+        - ibus-gtk4
+        - ibus-libs
 
   - type: default-flatpaks
     configurations:
