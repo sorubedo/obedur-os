@@ -73,6 +73,8 @@ modules:
         - xdg-user-dirs
         - qt5ct
         - qt6ct
+        - steam-devices
+        - steam-device-rules
 
   - type: dnf
     remove:
