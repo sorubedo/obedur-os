@@ -44,7 +44,7 @@ modules:
         - pam-u2f
         - starship
         - fastfetch
-        - tuigreet
+        - lightdm-gtk
         - niri
         - ghostty
         - grim
@@ -96,7 +96,7 @@ modules:
   - type: systemd
     system:
       enabled:
-        - greetd.service
+        - lightdm.service
         - firewalld.service
   - type: signing
   - type: initramfs
