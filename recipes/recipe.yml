@@ -37,6 +37,7 @@ modules:
         - leloubil/wl-clip-persist
         - lemmy/favorites
         - yselkowitz/nwg-shell
+        - mystical-devil/ReGreet
     install:
       packages:
         - firewalld
@@ -44,8 +45,7 @@ modules:
         - pam-u2f
         - starship
         - fastfetch
-        - lightdm-gtk
-        - lightdm-gtk-greeter-settings
+        - ReGreet
         - niri
         - ghostty
         - grim
@@ -97,7 +97,7 @@ modules:
   - type: systemd
     system:
       enabled:
-        - lightdm.service
+        - greetd.service
         - firewalld.service
   - type: signing
   - type: initramfs

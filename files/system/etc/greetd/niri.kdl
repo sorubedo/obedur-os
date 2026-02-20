@@ -1,0 +1,9 @@
+spawn-sh-at-startup "regreet; niri msg action quit --skip-confirmation"
+hotkey-overlay {
+    skip-at-startup
+}
+cursor {
+    xcursor-theme "Bibata-Modern-Ice"
+    xcursor-size 24
+}
+binds {}
