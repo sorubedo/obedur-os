@@ -96,7 +96,7 @@ modules:
 
   - type: default-flatpaks
     configurations:
-      - notify: true
+      - notify: false
         scope: user
         install:
           - io.github.flattool.Warehouse
@@ -109,5 +109,8 @@ modules:
         - firewalld.service
       mask:
         - systemd-remount-fs.service
+    user:
+      mask:
+        - app-nvidia\x2dsettings\x2dload@autostart.service
   - type: signing
   - type: initramfs
