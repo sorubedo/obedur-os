@@ -7,3 +7,35 @@ cursor {
     xcursor-size 24
 }
 binds {}
+input {
+    keyboard {
+        xkb {}
+        numlock
+    }
+
+    // 触摸板配置
+    touchpad {
+        tap
+        dwt
+    }
+
+    // 鼠标配置
+    mouse {
+    }
+    // 指点杆配置
+    trackpoint {
+        off
+    }
+    // 轨迹球配置
+    trackball {
+        off
+    }
+    // 绘图板配置
+    tablet {
+        off
+    }
+    // 触摸屏配置
+    touch {
+        off
+    }
+}

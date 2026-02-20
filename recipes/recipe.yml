@@ -43,6 +43,7 @@ modules:
         - firewalld
         - firewall-config
         - pam-u2f
+        - fprintd-pam
         - starship
         - fastfetch
         - ReGreet
@@ -99,5 +100,7 @@ modules:
       enabled:
         - greetd.service
         - firewalld.service
+      mask:
+        - systemd-remount-fs.service
   - type: signing
   - type: initramfs
