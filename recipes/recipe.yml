@@ -107,10 +107,10 @@ modules:
       enabled:
         - greetd.service
         - firewalld.service
-      mask:
+      masked:
         - systemd-remount-fs.service
     user:
-      mask:
+      masked:
         - app-nvidia\x2dsettings\x2dload@autostart.service
   - type: signing
   - type: initramfs
