@@ -8,6 +8,11 @@ base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia-open
 image-version: 43
 
 modules:
+  - type: os-release
+    properties:
+      NAME: Obedur-OS
+      PRETTY_NAME: Obedur-OS (Powered By BlueBuild)
+
   - type: kargs
     kargs:
       - rd.luks.options=fido2-device=auto
