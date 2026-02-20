@@ -16,10 +16,10 @@ modules:
     scripts:
       - add-terra.sh
       - add-dracut-modules.sh
-  - type: files
-    files:
-      - source: system
-        destination: /
+#  - type: files
+#    files:
+#      - source: system
+#        destination: /
 
   - type: fonts
     fonts:
