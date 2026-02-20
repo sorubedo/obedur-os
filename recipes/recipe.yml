@@ -109,8 +109,5 @@ modules:
         - firewalld.service
       masked:
         - systemd-remount-fs.service
-    user:
-      masked:
-        - app-nvidia\x2dsettings\x2dload@autostart.service
   - type: signing
   - type: initramfs
