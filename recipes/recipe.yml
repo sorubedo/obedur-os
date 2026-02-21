@@ -75,6 +75,7 @@ modules:
         - qt6ct
         - steam-devices
         - steam-device-rules
+        - seahorse
 
   - type: dnf
     remove:
