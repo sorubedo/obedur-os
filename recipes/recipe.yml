@@ -31,6 +31,7 @@ modules:
         - name: MapleMono-NF-CN-unhinted
           url: https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN-unhinted.zip
 
+  #添加terra仓库
   - type: dnf
     repos:
       files:
@@ -104,6 +105,12 @@ modules:
         - ibus-gtk3
         - ibus-gtk4
         - ibus-libs
+
+  - type: script
+    snippets:
+      - "dnf upgrade -y"
+      - "dnf autoremove -y"
+      - "dnf clean all"
 
   - type: default-flatpaks
     configurations:
