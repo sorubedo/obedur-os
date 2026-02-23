@@ -19,7 +19,6 @@ modules:
 
   - type: script
     scripts:
-      - add-terra.sh
       - add-dracut-modules.sh
   - type: files
     files:
@@ -33,7 +32,13 @@ modules:
           url: https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN-unhinted.zip
 
   - type: dnf
+    install:
+      packages:
+        - https://repos.fyralabs.com/terra%OS_VERSION%/terra-release
+
+  - type: dnf
     repos:
+      # nonfree: rpmfusion
       copr:
         - atim/starship
         - errornointernet/quickshell
@@ -76,18 +81,20 @@ modules:
         - steam-devices
         - steam-device-rules
         - seahorse
+      exclude:
+        - fuzzel
+        - alacritty
+        - swaylock
+        - waybar
 
   - type: dnf
     remove:
+      auto-remove: true
       packages:
         - firefox
         - firefox-langpacks
-        - fuzzel
-        - alacritty
         - nvtop
         - htop
-        - swaylock
-        - waybar
         - ibus
         - ibus-chewing
         - ibus-setup
