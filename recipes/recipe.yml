@@ -32,9 +32,12 @@ modules:
           url: https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN-unhinted.zip
 
   - type: dnf
+    repos:
+      files:
+        - https://github.com/terrapkg/subatomic-repos/raw/main/terra.repo
     install:
       packages:
-        - https://repos.fyralabs.com/terra%OS_VERSION%/terra-release
+        - terra-release
 
   - type: dnf
     repos:
