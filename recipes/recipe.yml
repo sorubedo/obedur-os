@@ -17,9 +17,10 @@ modules:
     kargs:
       - rd.luks.options=fido2-device=auto
 
-  - type: script
-    scripts:
-      - add-dracut-modules.sh
+  # - type: script
+  #   scripts:
+  #     - some.sh
+
   - type: files
     files:
       - source: system
