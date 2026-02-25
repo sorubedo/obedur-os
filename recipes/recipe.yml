@@ -87,6 +87,7 @@ modules:
         - steam-device-rules
         - seahorse
         - gparted
+        - xeyes
       exclude:
         - fuzzel
         - alacritty
