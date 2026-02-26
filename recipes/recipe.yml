@@ -53,6 +53,7 @@ modules:
         - lemmy/favorites
         - yselkowitz/nwg-shell
         - mystical-devil/ReGreet
+        - sim0n/selfuse_packages
     install:
       packages:
         - firewalld
@@ -76,6 +77,7 @@ modules:
         - blueman
         - quickshell
         - dae
+        - sing-box
         - fcitx5-chinese-addons
         - adw-gtk3-theme
         - nwg-look
