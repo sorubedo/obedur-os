@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Xeyes
+Name[zh_CN]=Xeyes 眼神追踪
+Comment=A pair of eyes that follow your mouse cursor
+Comment[zh_CN]=一双会跟着鼠标指针转动的眼睛
+Exec=xeyes
+# xeyes 通常没有自带图标，这里使用系统自带的一个表情图标作为替代
+Icon=face-cool
+Terminal=false
+Type=Application
+Categories=Utility;Amusement;
