@@ -50,6 +50,7 @@ modules:
         - sim0n/selfuse_packages
     install:
       packages:
+        - terminus-fonts-console
         - firewalld
         - firewall-config
         - pam-u2f
