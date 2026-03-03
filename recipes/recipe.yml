@@ -21,11 +21,6 @@ modules:
   #   scripts:
   #     - some.sh
 
-  - type: files
-    files:
-      - source: system
-        destination: /
-
   - type: fonts
     fonts:
       url-fonts:
@@ -116,6 +111,11 @@ modules:
       - "dnf upgrade -y"
       - "dnf autoremove -y"
       - "dnf clean all"
+
+  - type: files
+    files:
+      - source: system
+        destination: /
 
   - type: default-flatpaks
     configurations:
