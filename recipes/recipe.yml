@@ -47,7 +47,6 @@ modules:
         - leloubil/wl-clip-persist
         - lemmy/favorites
         - yselkowitz/nwg-shell
-        - mystical-devil/ReGreet
         - sim0n/selfuse_packages
     install:
       packages:
@@ -57,7 +56,7 @@ modules:
         - fprintd-pam
         - starship
         - fastfetch
-        - ReGreet
+        - tuigreet
         - niri
         - ghostty
         - grim
