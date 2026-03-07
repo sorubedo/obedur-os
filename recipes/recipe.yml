@@ -42,7 +42,6 @@ modules:
       copr:
         - atim/starship
         - errornointernet/quickshell
-        - zhullyb/v2rayA
         - atim/resources
         - leloubil/wl-clip-persist
         - lemmy/favorites
@@ -71,7 +70,6 @@ modules:
         - nautilus
         - blueman
         - quickshell
-        - dae
         - sing-box
         - fcitx5-chinese-addons
         - adw-gtk3-theme
