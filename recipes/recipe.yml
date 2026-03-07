@@ -41,7 +41,6 @@ modules:
       # nonfree: rpmfusion
       copr:
         - atim/starship
-        - errornointernet/quickshell
         - atim/resources
         - leloubil/wl-clip-persist
         - lemmy/favorites
@@ -69,7 +68,6 @@ modules:
         - mate-polkit
         - nautilus
         - blueman
-        - quickshell
         - sing-box
         - fcitx5-chinese-addons
         - adw-gtk3-theme
