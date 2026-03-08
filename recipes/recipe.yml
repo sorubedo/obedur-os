@@ -15,7 +15,7 @@ modules:
 
   - type: kargs
     kargs:
-      - rd.luks.options=fido2-device=auto
+      - rd.luks.options=tpm2-device=auto,fido2-device=auto
 
   # - type: script
   #   scripts:
