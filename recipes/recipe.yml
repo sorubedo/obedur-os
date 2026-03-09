@@ -65,7 +65,6 @@ modules:
         - noctalia-shell
         - kvantum
         - resources
-        - mate-polkit
         - nautilus
         - blueman
         - sing-box
