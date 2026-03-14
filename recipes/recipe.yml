@@ -49,6 +49,7 @@ modules:
     install:
       packages:
         - terminus-fonts-console
+        - zellij
         - firewalld
         - firewall-config
         - pam-u2f
@@ -92,6 +93,7 @@ modules:
       packages:
         - firefox
         - firefox-langpacks
+        - tmux
         - nvtop
         - htop
         - ibus
