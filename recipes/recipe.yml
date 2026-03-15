@@ -48,6 +48,8 @@ modules:
         - sim0n/selfuse_packages
     install:
       packages:
+        - iwd
+        - https://github.com/shazow/wifitui/releases/download/v0.11.0/wifitui-0.11.0-linux-x86_64.rpm
         - terminus-fonts-console
         - zellij
         - firewalld
