@@ -27,7 +27,9 @@ jobs:
       matrix:
         recipe:
           # !! Add your recipes here
-          - recipe.yml
+          - obedur-os-nvidia-open.yml
+          - obedur-os-nvidia.yml
+          - obedur-os.yml
     steps:
       # the build is fully handled by the reusable github action
       - name: Build Custom Image

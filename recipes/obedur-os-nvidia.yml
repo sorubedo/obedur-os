@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+# image will be published to ghcr.io/<user>/<name>
+name: obedur-os-nvidia
+description: This is my personal OS image.
+
+base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia
+image-version: 43
+
+modules:
+  - from-file: common-modules.yml
