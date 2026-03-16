@@ -1,0 +1,321 @@
+{
+  "log": {
+    "level": "info"
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "fakeip",
+        "tag": "FakeDns",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      },
+      {
+        "type": "tls",
+        "tag": "Local-DNS",
+        "detour": "🎯 全球直连",
+        "server": "223.5.5.5",
+        "server_port": 853
+      },
+      {
+        "type": "tls",
+        "tag": "Remote-DNS",
+        "detour": "🚀 节点选择",
+        "server": "8.8.8.8",
+        "server_port": 853
+      }
+    ],
+    "rules": [
+      {
+        "clash_mode": "direct",
+        "server": "Local-DNS"
+      },
+      {
+        "clash_mode": "global",
+        "server": "Remote-DNS"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "domain_suffix": [
+              ".lan",
+              ".localdomain",
+              ".example",
+              ".invalid",
+              ".localhost",
+              ".test",
+              ".local",
+              ".home.arpa",
+              ".msftconnecttest.com",
+              ".msftncsi.com",
+              ".market.xiaomi.com",
+              ".wotgame.cn",
+              ".wggames.cn",
+              ".wowsgame.cn",
+              ".wargaming.net",
+              ".steamcontent.com"
+            ],
+            "invert": true
+          },
+          {
+            "query_type": [
+              "A",
+              "AAAA"
+            ]
+          }
+        ],
+        "server": "FakeDns"
+      },
+      {
+        "rule_set": "GeoSite-CN",
+        "server": "Local-DNS"
+      }
+    ],
+    "final": "Remote-DNS",
+    "strategy": "prefer_ipv4",
+    "disable_cache": true,
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "socks",
+      "tag": "socks-in",
+      "listen": "127.0.0.1",
+      "listen_port": 1080,
+      "tcp_fast_open": true,
+      "udp_fragment": true
+    },
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "SB0",
+      "mtu": 9000,
+      "address": [
+        "172.18.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "auto_route": true,
+      "auto_redirect": true,
+      "strict_route": true,
+      "stack": "mixed"
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "🚀 节点选择",
+      "providers": null,
+      "use_all_providers": true,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🎯 全球直连",
+      "outbounds": [
+        "直连",
+        "🚀 节点选择"
+      ],
+      "providers": null,
+      "use_all_providers": true,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🐟 漏网之鱼",
+      "outbounds": [
+        "🚀 节点选择",
+        "🎯 全球直连",
+        "直连"
+      ],
+      "providers": null,
+      "use_all_providers": true,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "Telegram",
+      "outbounds": [
+        "🚀 节点选择",
+        "🎯 全球直连",
+        "直连"
+      ],
+      "providers": null,
+      "use_all_providers": true,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "MicroSoft",
+      "outbounds": [
+        "🚀 节点选择",
+        "🎯 全球直连",
+        "直连"
+      ],
+      "providers": null,
+      "use_all_providers": true,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "Google",
+      "outbounds": [
+        "🚀 节点选择",
+        "🎯 全球直连",
+        "直连"
+      ],
+      "providers": null,
+      "use_all_providers": true,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "GLOBAL",
+      "outbounds": [
+        "🚀 节点选择",
+        "直连",
+        "🎯 全球直连"
+      ],
+      "providers": null,
+      "use_all_providers": true,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "direct",
+      "tag": "直连"
+    }
+  ],
+  "providers": [
+    {
+      "type": "remote",
+      "tag": "proxy",
+      "url": "<CHANGE ME>",
+      "user_agent": "clash.meta",
+      "download_detour": "🎯 全球直连",
+      "update_interval": "2h0m0s",
+      "health_check": {
+        "enabled": true,
+        "url": "https://www.gstatic.com/generate_204",
+        "interval": "1h0m0s",
+        "timeout": "3s"
+      }
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "直连"
+      },
+      {
+        "clash_mode": "direct",
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "clash_mode": "global",
+        "outbound": "GLOBAL"
+      },
+      {
+        "action": "resolve",
+        "match_only": true
+      },
+      {
+        "rule_set": "AWA-Ads",
+        "action": "reject"
+      },
+      {
+        "rule_set": "Telegram.srs",
+        "outbound": "Telegram"
+      },
+      {
+        "rule_set": "Google.srs",
+        "outbound": "Google"
+      },
+      {
+        "rule_set": "MicroSoft.srs",
+        "outbound": "MicroSoft"
+      },
+      {
+        "rule_set": [
+          "GeoSite-CN",
+          "GeoIP-CN"
+        ],
+        "outbound": "🎯 全球直连"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "MicroSoft.srs",
+        "url": "https://cdn.jsdelivr.net/gh/senshinya/singbox_ruleset@main/rule/Microsoft/Microsoft.srs",
+        "download_detour": "🎯 全球直连",
+        "update_interval": "2h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Google.srs",
+        "url": "https://cdn.jsdelivr.net/gh/senshinya/singbox_ruleset@main/rule/Google/Google.srs",
+        "download_detour": "🎯 全球直连",
+        "update_interval": "2h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Telegram.srs",
+        "url": "https://cdn.jsdelivr.net/gh/senshinya/singbox_ruleset@main/rule/Telegram/Telegram.srs",
+        "download_detour": "🎯 全球直连",
+        "update_interval": "2h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "AWA-Ads",
+        "url": "https://gcore.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Singbox.json",
+        "download_detour": "🎯 全球直连",
+        "update_interval": "2h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoIP-CN",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
+        "download_detour": "🎯 全球直连",
+        "update_interval": "2h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-CN",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
+        "download_detour": "🎯 全球直连",
+        "update_interval": "2h0m0s"
+      }
+    ],
+    "final": "🐟 漏网之鱼",
+    "find_process": true,
+    "auto_detect_interface": true,
+    "default_domain_resolver": "Local-DNS"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db",
+      "store_fakeip": true,
+      "store_rdrc": true,
+      "rdrc_timeout": "168h0m0s"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:23333",
+      "external_ui": "./ui",
+      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "external_ui_download_detour": "🚀 节点选择",
+      "secret": "obedur",
+      "default_mode": "rule",
+      "access_control_allow_origin": "*"
+    }
+  }
+}
