@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Bash
 Comment=Bash
-Exec=Bash -l
+Exec=bash -l
 Type=Application
 DesktopNames=Bash
