@@ -1,0 +1,19 @@
+window-rule {
+    geometry-corner-radius 20
+    clip-to-geometry true
+}
+
+window-rule {
+    match app-id="org.gnome.Nautilus"
+    open-floating true            // 以浮动模式打开
+}
+
+window-rule {
+    match app-id="XEyes"
+    open-floating true            // 以浮动模式打开
+}
+
+window-rule {
+    match app-id="com.mitchellh.ghostty"
+    opacity 0.95
+}

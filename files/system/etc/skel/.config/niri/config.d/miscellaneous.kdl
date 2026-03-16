@@ -1,0 +1,19 @@
+prefer-no-csd
+screenshot-path "~/图片/屏幕截图/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+hotkey-overlay {
+    // skip-at-startup
+}
+
+cursor {
+    xcursor-theme "Bibata-Modern-Ice"
+    xcursor-size 24
+
+    hide-when-typing
+}
+
+overview {
+    workspace-shadow {
+        off
+    }
+}

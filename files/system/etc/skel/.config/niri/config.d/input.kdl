@@ -1,0 +1,39 @@
+input {
+    keyboard {
+        xkb {
+            // layout "us,ru"
+            // variant "colemak_dh"
+        }
+        numlock
+    }
+
+    touchpad {
+        tap
+        dwt
+        natural-scroll
+        scroll-method "two-finger"
+    }
+
+    mouse {
+    }
+
+    trackpoint {
+        off
+    }
+
+    trackball {
+        off
+    }
+
+    tablet {
+        off
+    }
+
+    touch {
+        off
+    }
+
+    // disable-power-key-handling
+    warp-mouse-to-focus
+    focus-follows-mouse max-scroll-amount="0%"
+}
