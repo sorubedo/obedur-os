@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Bash
+Comment=Bash
+Exec=Bash -l
+Type=Application
+DesktopNames=Bash

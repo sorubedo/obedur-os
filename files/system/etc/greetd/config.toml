@@ -4,6 +4,6 @@ vt = 1
 
 [default_session]
 
-command = "tuigreet --time --asterisks --remember --sessions /usr/share/wayland-sessions:/usr/share/xsessions --remember-session"
+command = "tuigreet --time --asterisks --remember --sessions /usr/share/wayland-sessions:/usr/share/xsessions:/usr/share/custom-sessions --remember-session"
 
 user = "greetd"
