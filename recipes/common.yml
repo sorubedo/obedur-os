@@ -11,9 +11,9 @@ modules:
     kargs:
       - rd.luks.options=tpm2-device=auto,fido2-device=auto
 
-  # - type: script
-  #   scripts:
-  #     - some.sh
+  - type: script
+    scripts:
+      - remove-unneed-dirs.sh
 
   - type: fonts
     fonts:
