@@ -92,9 +92,11 @@ binds {
     Mod+Ctrl+Shift+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
     Mod+Ctrl+Shift+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
 
+    Mod+C { center-column; }
     Mod+Q { close-window; }
     Mod+F { maximize-column; }
     Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+F { toggle-windowed-fullscreen; }
     Mod+W { toggle-window-floating; }
     Mod+Shift+W { switch-focus-between-floating-and-tiling; }
 
