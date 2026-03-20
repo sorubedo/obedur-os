@@ -11,10 +11,6 @@ modules:
     kargs:
       - rd.luks.options=tpm2-device=auto,fido2-device=auto
 
-  - type: script
-    scripts:
-      - remove-unneed-dirs.sh
-
   - type: fonts
     fonts:
       url-fonts:
@@ -100,17 +96,6 @@ modules:
         - ibus-gtk4
         - ibus-libs
 
-  - type: script
-    snippets:
-      - "dnf upgrade -y"
-      - "dnf autoremove -y"
-      - "dnf clean all"
-
-  - type: files
-    files:
-      - source: system
-        destination: /
-
   - type: default-flatpaks
     configurations:
       - notify: false
@@ -126,5 +111,15 @@ modules:
         - firewalld.service
       masked:
         - systemd-remount-fs.service
+
+  - type: files
+    files:
+      - source: system
+        destination: /
+        
+  - type: script
+    scripts:
+      - remove-unneed-dirs.sh
+        
   - type: signing
   - type: initramfs
