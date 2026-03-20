@@ -294,7 +294,10 @@
     "final": "🐟 漏网之鱼",
     "find_process": true,
     "auto_detect_interface": true,
-    "default_domain_resolver": "Local-DNS"
+    "default_domain_resolver": {
+      "server": "Local-DNS",
+      "strategy": "prefer_ipv4"
+    }
   },
   "experimental": {
     "cache_file": {
