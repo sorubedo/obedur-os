@@ -11,18 +11,15 @@
         "inet6_range": "fc00::/18"
       },
       {
-        "type": "tls",
+        "type": "https",
         "tag": "Local-DNS",
-        "detour": "🎯 全球直连",
-        "server": "223.5.5.5",
-        "server_port": 853
+        "server": "223.5.5.5"
       },
       {
-        "type": "tls",
+        "type": "https",
         "tag": "Remote-DNS",
         "detour": "🚀 节点选择",
-        "server": "8.8.8.8",
-        "server_port": 853
+        "server": "8.8.8.8"
       }
     ],
     "rules": [
@@ -32,7 +29,7 @@
       },
       {
         "clash_mode": "global",
-        "server": "Remote-DNS"
+        "server": "fakeip"
       },
       {
         "type": "logical",
@@ -75,13 +72,12 @@
     ],
     "final": "Remote-DNS",
     "strategy": "prefer_ipv4",
-    "disable_cache": true,
     "independent_cache": true
   },
   "inbounds": [
     {
-      "type": "socks",
-      "tag": "socks-in",
+      "type": "mixed",
+      "tag": "mixed-in",
       "listen": "127.0.0.1",
       "listen_port": 1080,
       "tcp_fast_open": true,
@@ -217,7 +213,7 @@
       },
       {
         "clash_mode": "direct",
-        "outbound": "🎯 全球直连"
+        "outbound": "直连"
       },
       {
         "clash_mode": "global",
