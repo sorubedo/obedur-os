@@ -96,6 +96,12 @@ modules:
         - ibus-gtk4
         - ibus-libs
 
+  - type: script
+    snippets:
+      - "dnf upgrade -y"
+      - "dnf autoremove -y"
+      - "dnf clean all"
+
   - type: default-flatpaks
     configurations:
       - notify: false
