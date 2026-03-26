@@ -109,8 +109,8 @@ binds {
     XF86MonBrightnessUp   { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
     XF86MonBrightnessDown { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
 
-    Print { spawn-sh "grim -g \"$(slurp -o)\" - | satty --filename - --output-filename $HOME/图片/屏幕截图/satty-$(date '+%Y%m%d-%H:%M:%S').png"; }
-    Mod+Shift+S { spawn-sh "grim -g \"$(slurp -o)\" - | satty --filename - --output-filename $HOME/图片/屏幕截图/satty-$(date '+%Y%m%d-%H:%M:%S').png"; }
+    Print { spawn-sh "dir=\"$(xdg-user-dir PICTURES)/Screenshots\"; mkdir -p \"$dir\"; grim -g \"$(slurp -o)\" - | satty --filename - --output-filename \"$dir/satty-$(date '+%Y%m%d-%H:%M:%S').png\""; }
+    Mod+Shift+S { spawn-sh "dir=\"$(xdg-user-dir PICTURES)/Screenshots\"; mkdir -p \"$dir\"; grim -g \"$(slurp)\" - | satty --filename - --output-filename \"$dir/satty-$(date '+%Y%m%d-%H:%M:%S').png\""; }
 
     Mod+Shift+P { power-off-monitors; }
 

@@ -1,9 +1,5 @@
 input {
     keyboard {
-        xkb {
-            // layout "us,ru"
-            // variant "colemak_dh"
-        }
         numlock
     }
 
@@ -33,7 +29,6 @@ input {
         off
     }
 
-    // disable-power-key-handling
     warp-mouse-to-focus
     focus-follows-mouse max-scroll-amount="0%"
 }

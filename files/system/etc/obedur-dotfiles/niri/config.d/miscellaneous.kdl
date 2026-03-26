@@ -1,8 +1,7 @@
 prefer-no-csd
-screenshot-path "~/图片/屏幕截图/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
-hotkey-overlay {
-    // skip-at-startup
+/-hotkey-overlay {
+    skip-at-startup
 }
 
 cursor {

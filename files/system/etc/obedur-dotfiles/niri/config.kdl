@@ -9,5 +9,4 @@ include "config.d/debug.kdl"
 include "config.d/binds.kdl"
 
 // wait niri next release
-include "config.d/outputs.kdl"
-// include optional=true "~/.config/niri/config.kdl"
+// include optional=true "~/.config/niri/override.kdl"
