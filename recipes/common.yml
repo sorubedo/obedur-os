@@ -73,6 +73,10 @@ modules:
         - xeyes
         - chezmoi
       exclude:
+        - gnome-shell
+        - gnome-session
+        - gnome-session-wayland-session
+        - gdm
         - ibus
         - fuzzel
         - alacritty
