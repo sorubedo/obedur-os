@@ -1,11 +1,13 @@
 include "config.d/env.kdl"
 include "config.d/startup.kdl"
 include "config.d/input.kdl"
-// include "config.d/outputs.kdl"
 include "config.d/layout.kdl"
 include "config.d/window-rules.kdl"
 include "config.d/layer-rules.kdl"
 include "config.d/miscellaneous.kdl"
 include "config.d/debug.kdl"
 include "config.d/binds.kdl"
-include "noctalia.kdl"
+
+// wait niri next release
+include "config.d/outputs.kdl"
+// include optional=true "~/.config/niri/config.kdl"
