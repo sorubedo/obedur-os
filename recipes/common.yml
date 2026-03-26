@@ -73,6 +73,7 @@ modules:
         - xeyes
         - chezmoi
       exclude:
+        - ibus
         - fuzzel
         - alacritty
         - swaylock
