@@ -42,9 +42,7 @@ modules:
         - https://github.com/shazow/wifitui/releases/download/v0.11.0/wifitui-0.11.0-linux-x86_64.rpm
         - terminus-fonts-console
         - zellij
-        - firewalld
         - firewall-config
-        - pam-u2f
         - fprintd-pam
         - starship
         - fastfetch
@@ -79,8 +77,6 @@ modules:
         - alacritty
         - swaylock
         - waybar
-
-  - type: dnf
     remove:
       auto-remove: true
       packages:
@@ -122,10 +118,10 @@ modules:
     files:
       - source: system
         destination: /
-        
+
   - type: script
     scripts:
       - remove-unneed-dirs.sh
-        
+
   - type: signing
   - type: initramfs
