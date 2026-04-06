@@ -48,13 +48,13 @@ modules:
         - starship
         - fastfetch
         - tuigreet
+        - noctalia-shell
         - "niri-0.0.git*"
         - ghostty
         - grim
         - slurp
         - satty
         - wl-clip-persist
-        - noctalia-shell
         - kvantum
         - resources
         - nautilus
