@@ -33,9 +33,10 @@ modules:
         - atim/starship
         - atim/resources
         - leloubil/wl-clip-persist
-        - lemmy/favorites
+        - lemmy/favorites #satty
         - yselkowitz/nwg-shell
-        - sim0n/selfuse_packages
+        - sim0n/selfuse_packages #sing-box-ref1nd
+        - yalter/niri-git
     install:
       packages:
         - iwd
