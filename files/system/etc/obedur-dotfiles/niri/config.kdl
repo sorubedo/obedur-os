@@ -8,5 +8,5 @@ include "config.d/miscellaneous.kdl"
 include "config.d/debug.kdl"
 include "config.d/binds.kdl"
 
-// wait niri next release
-// include optional=true "~/.config/niri/override.kdl"
+include optional=true "~/.config/niri/override.kdl"
+include optional=true "~/.config/niri/noctalia.kdl"
