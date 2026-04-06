@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+name: obedur-os-selfuse
+description: This is my personal self-use OS image.
+
+base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia-open
+image-version: 43
+
+modules:
+  - from-file: common.yml
+
+  - type: dnf
+    repos:
+      nonfree: rpmfusion
+    install:
+      packages:
+        - ayugram-desktop
+        - quickemu
