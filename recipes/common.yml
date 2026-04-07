@@ -83,6 +83,9 @@ modules:
         - alacritty
         - swaylock
         - waybar
+        - swaybg
+        - mako
+        - swayidle
     remove:
       auto-remove: true
       packages:
