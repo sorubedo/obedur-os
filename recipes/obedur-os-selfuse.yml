@@ -29,7 +29,8 @@ modules:
   - type: dnf
     repos:
       nonfree: rpmfusion
-      copr: bieszczaders/kernel-cachyos-addons
+      copr: 
+        - bieszczaders/kernel-cachyos-addons
     install:
       packages:
         - ayugram-desktop
