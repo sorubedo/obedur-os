@@ -1,6 +1,4 @@
----
 # yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
-
 modules:
   - type: os-release
     properties:
@@ -17,7 +15,6 @@ modules:
         - name: MapleMono-NF-CN-unhinted
           url: https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN-unhinted.zip
 
-  #添加terra仓库
   - type: dnf
     repos:
       files:
@@ -28,14 +25,13 @@ modules:
 
   - type: dnf
     repos:
-      # nonfree: rpmfusion
       copr:
         - atim/starship
         - atim/resources
         - leloubil/wl-clip-persist
-        - lemmy/favorites #satty
+        - lemmy/favorites
         - yselkowitz/nwg-shell
-        - sim0n/selfuse_packages #sing-box-ref1nd
+        - sim0n/selfuse_packages
         - yalter/niri-git
     install:
       packages:
@@ -118,14 +114,6 @@ modules:
       masked:
         - systemd-remount-fs.service
 
-  - type: files
-    files:
-      - source: system
-        destination: /
-
   - type: script
     scripts:
       - remove-unneed-dirs.sh
-
-  - type: signing
-  - type: initramfs

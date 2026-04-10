@@ -8,4 +8,6 @@ base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia
 image-version: 43
 
 modules:
-  - from-file: common.yml
+  - from-file: bootstrap.yml
+  - from-file: core.yml
+  - from-file: finalize.yml
