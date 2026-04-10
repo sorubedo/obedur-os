@@ -3,11 +3,26 @@
 name: obedur-os-selfuse
 description: This is my personal self-use OS image.
 
-base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia-open
+base-image: ghcr.io/blue-build/base-images/fedora-base
 image-version: 43
 
 modules:
   - from-file: common.yml
+
+  - type: custom-kernel
+    source: local
+    kernel: cachyos-lto
+    nvidia: true
+    secrets:
+      - type: env
+        name: MOK_PRIVATE_KEY
+        mount:
+          type: file
+          destination: /tmp/certs/MOK.priv
+    sign:
+      key: /tmp/certs/MOK.priv
+      cert: MOK.pem
+      mok-password: YourPassword
 
   - type: dnf
     repos:

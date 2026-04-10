@@ -3,3 +3,4 @@ cosign.private
 /Containerfile
 .vscode/settings.json
 /.bluebuild-scripts_*
+MOK.priv
