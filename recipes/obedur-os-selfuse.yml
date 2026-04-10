@@ -39,7 +39,7 @@ modules:
         - scx-tools-git
         - scx-manager
     replace:
-      - from-repo: copr:copr.fedorainfracloud.org:bieszczaders/kernel-cachyos-addons
+      - from-repo: copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos-addons
         packages:
           - old: zram-generator-defaults
             new: cachyos-settings
