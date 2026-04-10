@@ -29,9 +29,18 @@ modules:
   - type: dnf
     repos:
       nonfree: rpmfusion
+      copr: bieszczaders/kernel-cachyos-addons
     install:
       packages:
         - ayugram-desktop
         - quickemu
+        - scx-scheds-git
+        - scx-tools-git
+        - scx-manager
+    replace:
+      - from-repo: copr:copr.fedorainfracloud.org:bieszczaders/kernel-cachyos-addons
+        packages:
+          - old: zram-generator-defaults
+            new: cachyos-settings
 
   - from-file: finalize.yml
