@@ -22,7 +22,7 @@ modules:
     sign:
       key: /tmp/certs/MOK.priv
       cert: MOK.pem
-      mok-password: YourPassword
+      mok-password: obedur
 
   - type: dnf
     repos:
