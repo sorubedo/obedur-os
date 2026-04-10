@@ -7,8 +7,6 @@ base-image: ghcr.io/blue-build/base-images/fedora-base
 image-version: 43
 
 modules:
-  - from-file: common.yml
-
   - type: custom-kernel
     source: local
     kernel: cachyos-lto
@@ -21,7 +19,7 @@ modules:
           destination: /tmp/certs/MOK.priv
     sign:
       key: /tmp/certs/MOK.priv
-      cert: MOK.pem
+      cert: /usr/share/cert/MOK.pem
       mok-password: obedur
 
   - type: dnf
@@ -31,3 +29,5 @@ modules:
       packages:
         - ayugram-desktop
         - quickemu
+
+  - from-file: common.yml
