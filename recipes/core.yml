@@ -71,6 +71,7 @@ modules:
         - xeyes
         - chezmoi
         - podman-compose
+        - podlet
       exclude:
         - gnome-shell
         - gnome-session
