@@ -70,6 +70,7 @@ modules:
         - gparted
         - xeyes
         - chezmoi
+        - docker-compose
       exclude:
         - gnome-shell
         - gnome-session
@@ -83,7 +84,7 @@ modules:
         - swaybg
         - mako
         - swayidle
-        - docker-compose
+        
     remove:
       auto-remove: true
       packages:
