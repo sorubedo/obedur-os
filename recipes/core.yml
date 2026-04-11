@@ -70,7 +70,7 @@ modules:
         - gparted
         - xeyes
         - chezmoi
-        - docker-compose
+        - podman-compose
       exclude:
         - gnome-shell
         - gnome-session
