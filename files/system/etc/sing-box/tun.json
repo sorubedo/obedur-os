@@ -71,8 +71,7 @@
       }
     ],
     "final": "Remote-DNS",
-    "strategy": "prefer_ipv4",
-    "independent_cache": true
+    "strategy": "prefer_ipv4"
   },
   "inbounds": [
     {
@@ -304,7 +303,7 @@
       "enabled": true,
       "path": "cache.db",
       "store_fakeip": true,
-      "store_rdrc": true,
+      "store_dns": true,
       "rdrc_timeout": "168h0m0s"
     },
     "clash_api": {
