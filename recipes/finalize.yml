@@ -1,4 +1,4 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
 modules:
-  - type: signing
   - type: initramfs
+  - type: signing
