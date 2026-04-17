@@ -25,13 +25,14 @@ modules:
 
   - type: dnf
     repos:
+      files:
+        - https://sing-box.app/sing-box.repo
       copr:
         - atim/starship
         - atim/resources
         - leloubil/wl-clip-persist
         - lemmy/favorites
         - yselkowitz/nwg-shell
-        - sim0n/selfuse_packages
         - yalter/niri-git
     install:
       packages:
@@ -57,7 +58,7 @@ modules:
         - resources
         - nautilus
         - blueman
-        - sing-box
+        - sing-box-beta
         - fcitx5-chinese-addons
         - adw-gtk3-theme
         - nwg-look
