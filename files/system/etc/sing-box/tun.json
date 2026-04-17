@@ -1,7 +1,6 @@
 {
   "log": {
-    "level": "info",
-    "output": "/data/adb/box/run/sing-box.log"
+    "level": "info"
   },
   "dns": {
     "servers": [
@@ -280,13 +279,13 @@
         "type": "local",
         "tag": "Custom-Domain",
         "format": "source",
-        "path": "./rules/custom-domain.json"
+        "path": "/etc/sing-box/rules/custom-domain.json"
       },
       {
         "type": "local",
         "tag": "Custom-IP",
         "format": "source",
-        "path": "./rules/custom-ip.json"
+        "path": "/etc/sing-box/rules/custom-ip.json"
       },
       {
         "type": "remote",
