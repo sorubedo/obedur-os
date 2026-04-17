@@ -1,6 +1,7 @@
 {
   "log": {
-    "level": "info"
+    "level": "info",
+    "output": "/data/adb/box/run/sing-box.log"
   },
   "dns": {
     "servers": [
@@ -66,13 +67,28 @@
         "server": "FakeDns"
       },
       {
-        "rule_set": "GeoSite-CN",
+        "rule_set": "CN-Domain",
         "server": "Local-DNS"
       }
     ],
     "final": "Remote-DNS",
     "strategy": "prefer_ipv4"
   },
+  "http_clients": [
+    {
+      "tag": "direct",
+      "engine": "go",
+      "version": 2,
+      "disable_version_fallback": false
+    },
+    {
+      "tag": "proxy",
+      "engine": "go",
+      "version": 2,
+      "disable_version_fallback": false,
+      "detour": "🚀 节点选择"
+    }
+  ],
   "inbounds": [
     {
       "type": "mixed",
@@ -101,8 +117,9 @@
     {
       "type": "selector",
       "tag": "🚀 节点选择",
-      "providers": null,
-      "use_all_providers": true,
+      "outbounds": [
+        "jp(naive)"
+      ],
       "interrupt_exist_connections": true
     },
     {
@@ -112,8 +129,6 @@
         "直连",
         "🚀 节点选择"
       ],
-      "providers": null,
-      "use_all_providers": true,
       "interrupt_exist_connections": true
     },
     {
@@ -124,8 +139,6 @@
         "🎯 全球直连",
         "直连"
       ],
-      "providers": null,
-      "use_all_providers": true,
       "interrupt_exist_connections": true
     },
     {
@@ -136,8 +149,6 @@
         "🎯 全球直连",
         "直连"
       ],
-      "providers": null,
-      "use_all_providers": true,
       "interrupt_exist_connections": true
     },
     {
@@ -148,8 +159,6 @@
         "🎯 全球直连",
         "直连"
       ],
-      "providers": null,
-      "use_all_providers": true,
       "interrupt_exist_connections": true
     },
     {
@@ -160,8 +169,6 @@
         "🎯 全球直连",
         "直连"
       ],
-      "providers": null,
-      "use_all_providers": true,
       "interrupt_exist_connections": true
     },
     {
@@ -172,28 +179,34 @@
         "直连",
         "🎯 全球直连"
       ],
-      "providers": null,
-      "use_all_providers": true,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "Custom",
+      "outbounds": [
+        "🚀 节点选择",
+        "直连",
+        "🎯 全球直连"
+      ],
       "interrupt_exist_connections": true
     },
     {
       "type": "direct",
       "tag": "直连"
-    }
-  ],
-  "providers": [
+    },
     {
-      "type": "remote",
-      "tag": "proxy",
-      "url": "<CHANGE ME>",
-      "user_agent": "clash.meta",
-      "download_detour": "🎯 全球直连",
-      "update_interval": "2h0m0s",
-      "health_check": {
+      "type": "naive",
+      "tag": "jp(naive)",
+      "server": "YOUR_DOMAIN.com",
+      "server_port": 443,
+      "insecure_concurrency": 2,
+      "username": "YOUR_USERNAME",
+      "password": "YOUR_PASSWORD",
+      "quic": false,
+      "tls": {
         "enabled": true,
-        "url": "https://www.gstatic.com/generate_204",
-        "interval": "1h0m0s",
-        "timeout": "3s"
+        "server_name": "YOUR_DOMAIN.com"
       }
     }
   ],
@@ -219,74 +232,108 @@
         "outbound": "GLOBAL"
       },
       {
-        "action": "resolve",
-        "match_only": true
+        "rule_set": "Custom-Domain",
+        "outbound": "Custom"
       },
       {
         "rule_set": "AWA-Ads",
         "action": "reject"
       },
       {
-        "rule_set": "Telegram.srs",
+        "rule_set": "Telegram-Domain",
         "outbound": "Telegram"
       },
       {
-        "rule_set": "Google.srs",
+        "rule_set": "Google-Domain",
         "outbound": "Google"
       },
       {
-        "rule_set": "MicroSoft.srs",
+        "rule_set": "Microsoft-Domain",
         "outbound": "MicroSoft"
       },
       {
-        "rule_set": [
-          "GeoSite-CN",
-          "GeoIP-CN"
-        ],
+        "rule_set": "CN-Domain",
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "action": "resolve"
+      },
+      {
+        "rule_set": "Custom-IP",
+        "outbound": "Custom"
+      },
+      {
+        "rule_set": "Telegram-IP",
+        "outbound": "Telegram"
+      },
+      {
+        "rule_set": "Google-IP",
+        "outbound": "Google"
+      },
+      {
+        "rule_set": "CN-IP",
         "outbound": "🎯 全球直连"
       }
     ],
     "rule_set": [
       {
+        "type": "local",
+        "tag": "Custom-Domain",
+        "format": "source",
+        "path": "./rules/custom-domain.json"
+      },
+      {
+        "type": "local",
+        "tag": "Custom-IP",
+        "format": "source",
+        "path": "./rules/custom-ip.json"
+      },
+      {
         "type": "remote",
-        "tag": "MicroSoft.srs",
-        "url": "https://cdn.jsdelivr.net/gh/senshinya/singbox_ruleset@main/rule/Microsoft/Microsoft.srs",
-        "download_detour": "🎯 全球直连",
+        "tag": "Microsoft-Domain",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/microsoft.srs",
         "update_interval": "2h0m0s"
       },
       {
         "type": "remote",
-        "tag": "Google.srs",
-        "url": "https://cdn.jsdelivr.net/gh/senshinya/singbox_ruleset@main/rule/Google/Google.srs",
-        "download_detour": "🎯 全球直连",
+        "tag": "Google-Domain",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/google.srs",
         "update_interval": "2h0m0s"
       },
       {
         "type": "remote",
-        "tag": "Telegram.srs",
-        "url": "https://cdn.jsdelivr.net/gh/senshinya/singbox_ruleset@main/rule/Telegram/Telegram.srs",
-        "download_detour": "🎯 全球直连",
+        "tag": "Google-IP",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/google.srs",
+        "update_interval": "2h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Telegram-Domain",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/telegram.srs",
+        "update_interval": "2h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Telegram-IP",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/telegram.srs",
         "update_interval": "2h0m0s"
       },
       {
         "type": "remote",
         "tag": "AWA-Ads",
         "url": "https://gcore.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Singbox.json",
-        "download_detour": "🎯 全球直连",
         "update_interval": "2h0m0s"
       },
       {
         "type": "remote",
-        "tag": "GeoIP-CN",
-        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
-        "download_detour": "🎯 全球直连",
+        "tag": "CN-Domain",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs",
         "update_interval": "2h0m0s"
       },
       {
         "type": "remote",
-        "tag": "GeoSite-CN",
-        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
-        "download_detour": "🎯 全球直连",
+        "tag": "CN-IP",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/cn.srs",
         "update_interval": "2h0m0s"
       }
     ],
@@ -296,7 +343,8 @@
     "default_domain_resolver": {
       "server": "Local-DNS",
       "strategy": "prefer_ipv4"
-    }
+    },
+    "default_http_client": "direct"
   },
   "experimental": {
     "cache_file": {
@@ -309,8 +357,7 @@
     "clash_api": {
       "external_controller": "127.0.0.1:23333",
       "external_ui": "./ui",
-      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-      "external_ui_download_detour": "🚀 节点选择",
+      "external_ui_download_url": "https://ghfast.top/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
       "secret": "obedur",
       "default_mode": "rule",
       "access_control_allow_origin": "*"
