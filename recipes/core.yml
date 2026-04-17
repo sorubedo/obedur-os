@@ -32,12 +32,11 @@ modules:
         - lemmy/favorites
         - yselkowitz/nwg-shell
         - yalter/niri-git
-        - sim0n/selfuse_packages
     install:
       packages:
         - fish
         - iwd
-        - https://github.com/shazow/wifitui/releases/download/v0.12.0/wifitui-0.12.0-linux-x86_64.rpm
+        - https://github.com/shazow/wifitui/releases/download/v0.13.0/wifitui-0.13.0-linux-x86_64.rpm
         - terminus-fonts-console
         - mosh
         - zellij
@@ -57,7 +56,7 @@ modules:
         - resources
         - nautilus
         - blueman
-        - sing-box
+        - https://github.com/SagerNet/sing-box/releases/download/v1.14.0-alpha.13/sing-box_1.14.0-alpha.13_linux_x86_64.rpm
         - fcitx5-chinese-addons
         - adw-gtk3-theme
         - nwg-look
