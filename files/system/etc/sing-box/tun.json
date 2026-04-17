@@ -29,7 +29,7 @@
       },
       {
         "clash_mode": "global",
-        "server": "fakeip"
+        "server": "FakeDns"
       },
       {
         "type": "logical",
