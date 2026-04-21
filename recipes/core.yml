@@ -56,7 +56,7 @@ modules:
         - resources
         - nautilus
         - blueman
-        - https://github.com/SagerNet/sing-box/releases/download/v1.14.0-alpha.14/sing-box_1.14.0-alpha.14_linux_x86_64.rpm
+        - https://github.com/SagerNet/sing-box/releases/download/v1.14.0-alpha.15/sing-box_1.14.0-alpha.15_linux_x86_64.rpm
         - fcitx5-chinese-addons
         - adw-gtk3-theme
         - nwg-look
