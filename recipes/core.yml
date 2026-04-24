@@ -56,7 +56,6 @@ modules:
         - resources
         - nautilus
         - blueman
-        - https://github.com/SagerNet/sing-box/releases/download/v1.14.0-alpha.15/sing-box_1.14.0-alpha.15_linux_x86_64.rpm
         - fcitx5-chinese-addons
         - adw-gtk3-theme
         - nwg-look
@@ -85,7 +84,7 @@ modules:
         - swaybg
         - mako
         - swayidle
-        
+
     remove:
       auto-remove: true
       packages:
@@ -100,6 +99,9 @@ modules:
         - ibus-gtk3
         - ibus-gtk4
         - ibus-libs
+  - type: script
+    snippets:
+      - "curl -fsSL https://sing-box.app/install.sh | sh -s -- --beta"
 
   - type: default-flatpaks
     configurations:
