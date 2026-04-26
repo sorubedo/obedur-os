@@ -7,3 +7,5 @@ set -oue pipefail
 
 # Your code goes here.
 rm -rf /etc/skel/.mozilla
+rm /etc/profile.d/lang.csh
+rm /etc/profile.d/lang.sh
