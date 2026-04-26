@@ -17,3 +17,10 @@ window-rule {
     match app-id="com.mitchellh.ghostty"
     opacity 0.95
 }
+
+window-rule {
+  background-effect {
+    blur true
+    xray false
+  }
+}
