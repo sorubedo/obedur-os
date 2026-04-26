@@ -57,6 +57,8 @@ modules:
         - nautilus
         - blueman
         - fcitx5-chinese-addons
+        - fcitx5-rime
+        - librime-lua
         - adw-gtk3-theme
         - nwg-look
         - bibata-cursor-theme
