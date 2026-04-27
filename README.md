@@ -79,11 +79,3 @@
 ```bash
 cosign verify --key cosign.pub ghcr.io/sorubedo/obedur-os
 ```
-
----
-
-## 模块说明与致谢
-
-本镜像中内置的 **dracut-numlock** 模块（用于在启动时自动开启小键盘数字锁）直接提取自开源仓库：[ChrTall/dracut-numlock](https://github.com/ChrTall/dracut-numlock)。感谢原作者的开源贡献！
-
-本镜像中使用的 **custom-kernel** 模块（用于安装 CachyOS 内核）是从 [Origami-Linux](https://gitlab.com/origami-linux/images) 项目移植而来。感谢 Origami 社区的开源精神！

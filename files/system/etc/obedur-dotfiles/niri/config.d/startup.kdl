@@ -1,2 +1,1 @@
 spawn-at-startup "wl-clip-persist" "--clipboard" "regular" "--reconnect-tries" "0"
-spawn-at-startup "qs" "-c" "noctalia-shell"
