@@ -10,25 +10,6 @@ input {
         scroll-method "two-finger"
     }
 
-    mouse {
-    }
-
-    trackpoint {
-        off
-    }
-
-    trackball {
-        off
-    }
-
-    tablet {
-        off
-    }
-
-    touch {
-        off
-    }
-
     warp-mouse-to-focus
     focus-follows-mouse max-scroll-amount="0%"
 }

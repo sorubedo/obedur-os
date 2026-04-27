@@ -1,11 +1,11 @@
 include "config.d/env.kdl"
+include "config.d/noctalia.kdl"
 include "config.d/startup.kdl"
 include "config.d/input.kdl"
 include "config.d/layout.kdl"
 include "config.d/window-rules.kdl"
 include "config.d/miscellaneous.kdl"
 include "config.d/binds.kdl"
-include "config.d/noctalia.kdl"
 
 include optional=true "~/.config/niri/override.kdl"
 include optional=true "~/.config/niri/noctalia.kdl"
