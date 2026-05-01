@@ -2,8 +2,11 @@ name: ci
 on:
   push:
     branches:
-      - master 
+      - master
       - main
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
 permissions:
   contents: write
 jobs:

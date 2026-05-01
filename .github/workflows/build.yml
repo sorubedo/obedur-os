@@ -6,6 +6,8 @@ on:
         # (20 minutes after last ublue images start building)
   push:
     paths-ignore: # don't rebuild if only documentation has changed
+      - "docs/**"
+      - "mkdocs.yml"
       - "**.md"
 
   pull_request:

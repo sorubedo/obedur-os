@@ -9,8 +9,8 @@
 
   --md-accent-fg-color:                #00bfa5;
   --md-accent-fg-color--transparent:   #00bfa51a;
-  --md-accent-bg-color:                #00bfa5;
-  --md-accent-bg-color--light:         #00bfa51a;
+  --md-accent-bg-color:                #ffffff;
+  --md-accent-bg-color--light:         #ffffff1a;
 
   --md-typeset-a-color: #00796b;
 }
@@ -24,8 +24,8 @@
 
   --md-accent-fg-color:                #1de9b6;
   --md-accent-fg-color--transparent:   #1de9b61a;
-  --md-accent-bg-color:                #1de9b6;
-  --md-accent-bg-color--light:         #1de9b61a;
+  --md-accent-bg-color:                #00332c;
+  --md-accent-bg-color--light:         #00332c1a;
 
   --md-typeset-a-color: #1de9b6;
 }
