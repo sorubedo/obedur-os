@@ -39,8 +39,6 @@ Obedur-OS 是基于 [BlueBuild](https://blue-build.org/) 构建的 Fedora Atomic
 
 </div>
 
-> 将截图放入 `docs/images/` 目录，然后在 Markdown 中用 `![描述](images/文件名.png)` 引用即可。点击图片自动放大。
-
 ## 快速开始
 
 1. [选择镜像](installation.md#_2) — 根据显卡硬件选择合适的变体
