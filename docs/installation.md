@@ -121,4 +121,4 @@ cosign verify --key cosign.pub ghcr.io/sorubedo/obedur-os
 
 ## ISO 安装
 
-在已有的 Fedora Atomic 系统上可生成离线 ISO 用于全新安装。详见 [BlueBuild ISO 指南](https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso)。ISO 体积较大，需使用其他平台托管分发。
+在已有的 Fedora Atomic 系统上可生成离线 ISO 用于全新安装。详见 [BlueBuild ISO 指南](https://blue-build.org/how-to/generate-iso/)。ISO 体积较大，需使用其他平台托管分发。
