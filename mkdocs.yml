@@ -1,19 +1,47 @@
 site_name: Obedur-OS
+site_description: Fedora Atomic 不可变系统 — Niri 滚动平铺 Wayland 桌面
 site_url: https://sorubedo.github.io/obedur-os/
 repo_url: https://github.com/sorubedo/obedur-os
+repo_name: sorubedo/obedur-os
+edit_uri: edit/main/docs/
+
 theme:
   name: material
+  language: zh
+  icon:
+    logo: material/package-variant-closed
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+  features:
+    - navigation.tracking
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
   palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: 跟随系统
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
-        name: 切换到暗色模式
+        name: 切换至暗色模式
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
-        name: 切换到亮色模式
+        name: 切换至系统偏好
 
 nav:
   - 首页: index.md
@@ -21,9 +49,36 @@ nav:
   - 桌面操作: desktop.md
   - 常见问题: faq.md
 
+extra_css:
+  - stylesheets/extra.css
+
 markdown_extensions:
   - admonition
-  - pymdownx.details
+  - attr_list
+  - md_in_html
   - tables
-  - pymdownx.highlight
+  - footnotes
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/sorubedo/obedur-os
+      name: sorubedo/obedur-os
+
+copyright: "&copy; 2026 Obedur-OS &mdash; 基于 BlueBuild 构建"

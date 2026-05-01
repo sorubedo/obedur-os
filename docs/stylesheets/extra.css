@@ -1,0 +1,46 @@
+/* === Custom color palette === */
+
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color:        #00796b;
+  --md-primary-fg-color--light: #48a999;
+  --md-primary-fg-color--dark:  #004c40;
+  --md-primary-bg-color:        #ffffff;
+  --md-primary-bg-color--light: #ffffffb3;
+
+  --md-accent-fg-color:                #00bfa5;
+  --md-accent-fg-color--transparent:   #00bfa51a;
+  --md-accent-bg-color:                #00bfa5;
+  --md-accent-bg-color--light:         #00bfa51a;
+
+  --md-typeset-a-color: #00796b;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color:        #00bfa5;
+  --md-primary-fg-color--light: #5df2d2;
+  --md-primary-fg-color--dark:  #008e76;
+  --md-primary-bg-color:        #00332c;
+  --md-primary-bg-color--light: #00332cb3;
+
+  --md-accent-fg-color:                #1de9b6;
+  --md-accent-fg-color--transparent:   #1de9b61a;
+  --md-accent-bg-color:                #1de9b6;
+  --md-accent-bg-color--light:         #1de9b61a;
+
+  --md-typeset-a-color: #1de9b6;
+}
+
+/* === Smooth scroll === */
+html {
+  scroll-behavior: smooth;
+}
+
+/* === Nicer code blocks === */
+.highlighttable .linenos {
+  border-radius: 0 !important;
+}
+
+/* === Admonition tweaks === */
+:root {
+  --md-admonition-icon--tip: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2m-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8z"/></svg>');
+}
