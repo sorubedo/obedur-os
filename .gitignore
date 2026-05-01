@@ -4,3 +4,5 @@ cosign.private
 .vscode/settings.json
 /.bluebuild-scripts_*
 MOK.priv
+venv
+CLAUDE.md
