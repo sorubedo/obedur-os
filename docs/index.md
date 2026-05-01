@@ -13,6 +13,34 @@ Obedur-OS 是基于 [BlueBuild](https://blue-build.org/) 构建的 Fedora Atomic
 
 简单来说：**系统更稳定、更新更安全、回滚更简单。**
 
+## 系统预览
+
+<div class="image-grid" markdown="1">
+
+<figure>
+  <img src="images/desktop-overview.png" alt="桌面概览" loading="lazy">
+  <figcaption>Niri + Noctalia Shell 桌面概览</figcaption>
+</figure>
+
+<figure>
+  <img src="images/launcher.png" alt="启动器" loading="lazy">
+  <figcaption>Noctalia Shell 启动器</figcaption>
+</figure>
+
+<figure>
+  <img src="images/terminal.png" alt="终端" loading="lazy">
+  <figcaption>Ghostty 终端</figcaption>
+</figure>
+
+<figure>
+  <img src="images/workspaces.png" alt="工作区" loading="lazy">
+  <figcaption>多工作区布局</figcaption>
+</figure>
+
+</div>
+
+> 将截图放入 `docs/images/` 目录，然后在 Markdown 中用 `![描述](images/文件名.png)` 引用即可。点击图片自动放大。
+
 ## 快速开始
 
 1. [选择镜像](installation.md#_2) — 根据显卡硬件选择合适的变体
@@ -30,7 +58,7 @@ Obedur-OS 是基于 [BlueBuild](https://blue-build.org/) 构建的 Fedora Atomic
 | **容器化工作流** | 预装 podman-compose、podlet、distrobox |
 | **自动构建签名** | GitHub Actions 每日构建，cosign 签名验证 |
 
-## 技术栈
+## 系统组件
 
 | 组件 | 选择 |
 | :--- | :--- |
