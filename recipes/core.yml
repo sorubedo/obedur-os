@@ -124,3 +124,8 @@ modules:
   - type: script
     scripts:
       - remove-unneed-dirs.sh
+
+  - type: files
+    files:
+      - source: post-dnf
+        destination: /
