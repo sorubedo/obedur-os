@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Niri-Obedur
 Comment=Niri Session with obedur's dotfiles
-Exec=env NIRI_CONFIG=/etc/obedur-dotfiles/niri/config.kdl niri-session
+Exec=env NIRI_CONFIG=/usr/share/obedur-dotfiles/niri/config.kdl niri-session
 Type=Application
 DesktopNames=niri

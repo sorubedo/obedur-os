@@ -1,0 +1,72 @@
+environment {
+    XMODIFIERS "@im=fcitx"
+    QT_IM_MODULES "wayland;fcitx"
+    QT_IM_MODULE "fcitx"
+    SDL_IM_MODULE "fcitx"
+
+    GTK_THEME "Lavanda-Sea-Dark"
+    QS_ICON_THEME "Tela-dark"
+}
+
+spawn-at-startup "fcitx5" "-d"
+
+input {
+    mouse {
+    }
+
+    trackpoint {
+        off
+    }
+
+    trackball {
+        off
+    }
+
+    tablet {
+        off
+    }
+
+    touch {
+        off
+    }
+}
+
+
+output "eDP-1" {
+    mode "2560x1600@240"
+
+    scale 1.5
+
+    transform "normal"
+    position x=0 y=0
+
+    variable-refresh-rate
+
+    focus-at-startup
+
+    hot-corners {
+        bottom-left
+    }
+}
+
+output "HDMI-A-5" {
+    mode "1920x1080@60"
+    scale 1.125
+
+    transform "90"
+    position x=1707 y=0
+
+    hot-corners {
+        bottom-right
+    }
+    layout {
+        default-column-width { proportion 1.0; }
+        preset-column-widths {
+            proportion 1.0
+        }
+    }
+}
+
+hotkey-overlay {
+    skip-at-startup
+}
