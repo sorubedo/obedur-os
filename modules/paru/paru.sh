@@ -78,6 +78,7 @@ LOCAL_REPO_DIR="/var/lib/repo/aur"
 if ! grep -q '^\[aur\]' /etc/pacman.conf 2>/dev/null; then
     log "Adding local aur repo to /etc/pacman.conf."
     mkdir -p "${LOCAL_REPO_DIR}"
+    chown -R "${USER}:" "${LOCAL_REPO_DIR}"
     cat >> /etc/pacman.conf <<EOF
 
 [aur]
