@@ -77,7 +77,7 @@ setup:
     if confirm "复制 override.kdl.example 到 ~/.config/niri/override.kdl？[y/N]"; then
         copy_file "$SRC/niri/override.kdl.example" "$HOME/.config/niri/override.kdl"
         if [ -f "$HOME/.config/niri/override.kdl" ]; then
-            echo "  ⚠ 请编辑 $HOME/.config/niri/override.kdl 以匹配你的显示器和偏好"
+            echo "  ⚠ 请运行 niri msg outputs 查看显示器名称和模式，据此编辑 $HOME/.config/niri/override.kdl"
         fi
     else
         echo "  跳过"
