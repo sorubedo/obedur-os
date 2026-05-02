@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Obedur-OS Setup
+Comment=首次登录设置向导
+Exec=ghostty -e blujust setup
+Type=Application
+Categories=Settings

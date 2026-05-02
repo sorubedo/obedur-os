@@ -1,5 +1,7 @@
 # paru
 
+> 纯图一乐，跟项目无关。
+
 通过 [paru](https://github.com/Morganamilo/paru) 在基于 Arch Linux 的镜像中安装 AUR 软件包。
 
 **适用场景**：子层镜像（sub-layer）或 stage，基础镜像必须基于 Arch Linux 且已预装 `paru`。

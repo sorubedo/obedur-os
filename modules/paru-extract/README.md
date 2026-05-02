@@ -1,5 +1,7 @@
 # paru-extract
 
+> 纯图一乐，跟项目无关。
+
 从已安装的 pacman/AUR 包中提取所有文件到指定目录，配合 `copy` 模块将文件从 stage 转移到主镜像。
 
 **必须配合 `paru` 模块使用**：先 `paru` 装包，再 `paru-extract` 提取。
