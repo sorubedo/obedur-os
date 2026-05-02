@@ -6,6 +6,19 @@ description: This is my personal self-use OS image.
 base-image: ghcr.io/blue-build/base-images/fedora-base
 image-version: 43
 
+stages:
+  - name: arch
+    from: ghcr.io/ublue-os/arch-toolbox:latest
+    modules:
+      - type: paru
+        source: local
+        packages:
+          - lavanda-gtk-theme-git
+      - type: script
+        snippets:
+          - mkdir -p /out/themes
+          - cp -r /usr/share/themes/Lavanda* /out/themes/
+
 modules:
   - from-file: modules/bootstrap.yml
 
@@ -22,5 +35,10 @@ modules:
       packages:
         - ayugram-desktop
         - quickemu
+
+  - type: copy
+    from: arch
+    src: /out/themes/
+    dest: /usr/share/themes/
 
   - from-file: modules/finalize.yml

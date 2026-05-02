@@ -1,0 +1,9 @@
+name: paru
+shortdesc: Install AUR packages via paru on Arch-based images (sub-layers).
+example: |
+  type: paru
+  user: builder           # Default: builder — non-root user that runs paru
+  packages:               # AUR packages to install
+    - paru-bin
+    - aurutils
+  sudo: true              # Default: true — configure passwordless sudo for the user
