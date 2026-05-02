@@ -64,31 +64,9 @@ CombinedUpgrade
 CleanAfter
 UpgradeMenu
 NewsOnUpgrade
-LocalRepo
 EOF
     chown -R "${USER}:${USER}" "$(dirname "${PARU_CONF}")"
 fi
-
-# ---------------------------------------------------------------------------
-# Configure local repo (required by paru's LocalRepo)
-# ---------------------------------------------------------------------------
-
-LOCAL_REPO_DIR="/var/lib/repo/aur"
-
-if ! grep -q '^\[aur\]' /etc/pacman.conf 2>/dev/null; then
-    log "Adding local aur repo to /etc/pacman.conf."
-    mkdir -p "${LOCAL_REPO_DIR}"
-    chown -R "${USER}:" "${LOCAL_REPO_DIR}"
-    cat >> /etc/pacman.conf <<EOF
-
-[aur]
-SigLevel = PackageOptional DatabaseOptional
-Server = file://${LOCAL_REPO_DIR}
-EOF
-fi
-
-log "Initializing local repo with paru -Ly..."
-runuser -u "${USER}" -- paru -Ly --noconfirm
 
 # ---------------------------------------------------------------------------
 # Install AUR packages
