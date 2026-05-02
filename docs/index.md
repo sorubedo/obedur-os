@@ -51,7 +51,7 @@ Obedur-OS 是基于 [BlueBuild](https://blue-build.org/) 构建的 Fedora Atomic
 | :--- | :--- |
 | **不可变系统** | Fedora Atomic (Ostree Native Container)，系统只读，更新原子化，一键回滚 |
 | **Niri 滚动平铺** | 横向无限平铺 + 纵向工作区，配合 [Noctalia Shell](https://docs.noctalia.dev/) 精美桌面 |
-| **CachyOS 内核** | 自用版集成 CachyOS LTO 优化内核 |
+| **CachyOS 内核** | 全版本集成 CachyOS LTO 优化内核 |
 | **SecureBoot** | 内核模块签名 + MOK 首次启动自动注册 |
 | **容器化工作流** | 预装 podman-compose、podlet、distrobox |
 | **自动构建签名** | GitHub Actions 每日构建，cosign 签名验证 |

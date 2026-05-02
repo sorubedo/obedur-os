@@ -29,9 +29,8 @@ jobs:
       matrix:
         recipe:
           # !! Add your recipes here
-          - obedur-os-nvidia-open.yml
-          - obedur-os-nvidia.yml
           - obedur-os.yml
+          - obedur-os-nvidia.yml
           - obedur-os-selfuse.yml
     steps:
       # the build is fully handled by the reusable github action

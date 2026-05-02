@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
+modules:
+  - type: dnf
+    repos:
+      copr:
+        - bieszczaders/kernel-cachyos-addons
+    install:
+      packages:
+        - scx-scheds-git
+        - scx-tools-git
+        - scx-manager
+    replace:
+      - from-repo: copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos-addons
+        packages:
+          - old: zram-generator-defaults
+            new: cachyos-settings

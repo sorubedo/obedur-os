@@ -4,10 +4,16 @@
 name: obedur-os-nvidia
 description: This is my personal OS image.
 
-base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia
+base-image: ghcr.io/blue-build/base-images/fedora-base
 image-version: 43
 
 modules:
   - from-file: bootstrap.yml
+
+  - from-file: cachyos-kernel-nvidia.yml
+
   - from-file: core.yml
+
+  - from-file: cachyos-extras.yml
+
   - from-file: finalize.yml

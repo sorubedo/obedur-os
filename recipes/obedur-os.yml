@@ -9,5 +9,11 @@ image-version: 43
 
 modules:
   - from-file: bootstrap.yml
+
+  - from-file: cachyos-kernel.yml
+
   - from-file: core.yml
+
+  - from-file: cachyos-extras.yml
+
   - from-file: finalize.yml
