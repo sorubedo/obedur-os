@@ -105,7 +105,7 @@ setup:
             3) _f="ter-v20n" ;;  4) _f="ter-v20b" ;;
             5) _f="ter-v24n" ;;  6) _f="ter-v24b" ;;
             7) _f="ter-v32n" ;;  8) _f="ter-v32b" ;;
-            *) echo "  无效选择，跳过" ;; _f="" ;;
+            *) echo "  无效选择，跳过"; _f="" ;;
         esac
         if [ -n "$_f" ]; then
             if grep -q '^FONT=' /etc/vconsole.conf 2>/dev/null; then
