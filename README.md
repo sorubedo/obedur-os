@@ -2,7 +2,7 @@
 
 基于 [BlueBuild](https://blue-build.org/) 构建的 Fedora Atomic 不可变系统镜像。提供开箱即用的 Niri 滚动平铺 Wayland 桌面环境，集成 CachyOS LTO 优化内核。
 
-> 完整文档请访问 **[sorubedo.github.io/obedur-os](https://sorubedo.github.io/obedur-os/)**。
+> 要求 CPU 支持 **x86_64-v3** 指令集（Intel Haswell / AMD Excavator 及以上）。完整文档请访问 **[sorubedo.github.io/obedur-os](https://sorubedo.github.io/obedur-os/)**。
 
 ## 特性
 

@@ -2,6 +2,8 @@
 
 Obedur-OS 是基于 [BlueBuild](https://blue-build.org/) 构建的 Fedora Atomic 不可变系统镜像，提供开箱即用的 Niri 滚动平铺 Wayland 桌面环境。
 
+> 本系统使用 CachyOS LTO 优化内核，较为激进，要求 CPU 支持 **x86_64-v3** 指令集（Intel Haswell / AMD Excavator 及更新架构）。
+
 ## 什么是不可变系统？
 
 与传统的 Linux 发行版不同，Obedur-OS 采用**不可变基础设施**理念：

@@ -3,6 +3,7 @@
 ## 前置条件
 
 - 一台已安装 Fedora Atomic（如 Fedora Silverblue、Kinoite 等）的机器
+- **CPU 至少支持 x86_64-v3 指令集**（Intel Haswell / AMD Excavator 及更新架构）
 - 网络连接
 - 了解当前使用的显卡型号
 
@@ -16,7 +17,7 @@
 | **`obedur-os-nvidia`** | NVIDIA 显卡 | `fedora-base` |
 | **`obedur-os-selfuse`** | 自用版 | `fedora-base` |
 
-> 所有变体均集成 CachyOS LTO 内核。NVIDIA 变体通过 CachyOS 内核模块提供驱动
+> 所有变体均集成 CachyOS LTO 内核，需要 CPU 支持 **x86_64-v3** 指令集（Intel Haswell / AMD Excavator 及以上）。
 
 以下命令以 `obedur-os` 为例，请根据你的显卡替换为对应镜像名。
 
