@@ -14,10 +14,11 @@ stages:
         source: local
         packages:
           - lavanda-gtk-theme-git
-      - type: script
-        snippets:
-          - mkdir -p /out/themes
-          - cp -r /usr/share/themes/Lavanda* /out/themes/
+      - type: paru-extract
+        source: local
+        packages:
+          - lavanda-gtk-theme-git
+        output: /out
 
 modules:
   - from-file: modules/bootstrap.yml
@@ -38,7 +39,7 @@ modules:
 
   - type: copy
     from: arch
-    src: /out/themes/
-    dest: /usr/share/themes/
+    src: /out/
+    dest: /
 
   - from-file: modules/finalize.yml

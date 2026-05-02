@@ -1,0 +1,7 @@
+name: paru-extract
+shortdesc: Extract files from pacman-installed packages to a staging directory for stage-to-image transfer.
+example: |
+  type: paru-extract
+  packages:               # Package names to extract (must already be installed)
+    - lavanda-gtk-theme-git
+  output: /out             # Destination directory for extracted files
