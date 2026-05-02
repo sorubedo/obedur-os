@@ -15,9 +15,6 @@
 | **`obedur-os`** | Intel / AMD 显卡 | `fedora-base` |
 | **`obedur-os-nvidia`** | NVIDIA 闭源专有驱动 | `fedora-base-nvidia` |
 | **`obedur-os-nvidia-open`** | NVIDIA 开源内核模块 | `fedora-base-nvidia-open` |
-| **`obedur-os-selfuse`** | 自用版（CachyOS LTO + NVIDIA） | `fedora-base` |
-
-> `obedur-os-selfuse` 为作者自用版本，包含 CachyOS LTO 内核、ayugram-desktop、quickemu 及 scx 调度器。不建议直接使用。
 
 以下命令以 `obedur-os` 为例，请根据你的显卡替换为对应镜像名。
 
