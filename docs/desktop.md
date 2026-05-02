@@ -116,7 +116,7 @@ Niri 的布局有两个维度：
 
 ## 自定义配置
 
-默认配置位于 `/etc/obedur-dotfiles/niri/`。如需覆盖，在 `~/.config/niri/` 下创建 `override.kdl`：
+默认配置位于 `/usr/share/obedur-dotfiles/niri/`。如需覆盖，在 `~/.config/niri/` 下创建 `override.kdl`（可参考 `/usr/share/obedur-dotfiles/niri/override.kdl.example` 模板）：
 
 ```kdl
 // ~/.config/niri/override.kdl
