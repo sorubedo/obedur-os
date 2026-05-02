@@ -1,6 +1,6 @@
 SRC := "/usr/share/obedur-dotfiles"
 
-_confirm default="no" prompt:
+_confirm prompt default="no":
     #!/usr/bin/bash
     default="{{ default }}"
     read -p "{{ prompt }} " -r answer
