@@ -39,12 +39,9 @@ _total_entries=0
 for pkg in "${PACKAGES[@]}"; do
     log "Extracting files from '${pkg}'..."
 
-    # Read pacman -Ql into a file first — avoid pipefail from pacman|while
-    _ql=$(mktemp)
     _list=$(mktemp)
-    pacman -Ql "${pkg}" > "${_ql}" 2>/dev/null || true
 
-    while read -r line; do
+    pacman -Ql "${pkg}" 2>/dev/null | while read -r line; do
         f="${line#* }"
         [ -n "${f}" ] || continue
 
@@ -59,7 +56,7 @@ for pkg in "${PACKAGES[@]}"; do
             mkdir -p "$(dirname "${_dest}")"
             cp -a "${f}" "${_dest}"
         fi
-    done < "${_ql}"
+    done
 
     _count=$(wc -l < "${_list}")
     _total_entries=$((_total_entries + _count))
@@ -68,14 +65,14 @@ for pkg in "${PACKAGES[@]}"; do
 
     if [ "${_count}" -gt 0 ]; then
         log "  ── file tree ─────────────────────"
-        (cd "${OUTPUT}" && find . | sort | sed 's|[^/]*/|  |g; s|^  ||') > "${_list}"
+        (cd "${OUTPUT}" && find . -maxdepth 6 | sort | sed 's|[^/]*/|  |g; s|^  ||') > "${_list}"
         while read -r _line; do
             detail "${_line}"
         done < "${_list}"
         log "  ──────────────────────────────────"
     fi
 
-    rm -f "${_ql}" "${_list}"
+    rm -f "${_list}"
 done
 
 log "Extraction complete. Total entries across all packages: ${_total_entries}"
