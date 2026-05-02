@@ -8,12 +8,12 @@ base-image: ghcr.io/blue-build/base-images/fedora-base
 image-version: 43
 
 modules:
-  - from-file: bootstrap.yml
+  - from-file: modules/bootstrap.yml
 
-  - from-file: cachyos-kernel-nvidia.yml
+  - from-file: modules/cachyos-kernel-nvidia.yml
 
-  - from-file: core.yml
+  - from-file: modules/core.yml
 
-  - from-file: cachyos-extras.yml
+  - from-file: modules/cachyos-extras.yml
 
-  - from-file: finalize.yml
+  - from-file: modules/finalize.yml
