@@ -64,13 +64,6 @@ systemctl reboot
 cosign verify --key cosign.pub ghcr.io/sorubedo/obedur-os
 ```
 
-## 本地构建
-
-```bash
-pip install bluebuild
-bluebuild build ./recipes/obedur-os.yml
-```
-
 ## 致谢
 
 - [BlueBuild](https://blue-build.org/) — 不可变镜像构建框架
