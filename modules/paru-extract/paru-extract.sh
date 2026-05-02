@@ -65,7 +65,10 @@ for pkg in "${PACKAGES[@]}"; do
 
     if [ "${_count}" -gt 0 ]; then
         log "  ── file tree ─────────────────────"
-        (cd "${OUTPUT}" && find . -maxdepth 6 | sort | sed 's|[^/]*/|  |g; s|^  ||') > "${_list}"
+        (cd "${OUTPUT}" && find . -maxdepth 6 | sort | awk -F/ '{
+            for (i=1; i<NF; i++) printf "|   "
+            print "|-- " $NF
+        }') > "${_list}"
         while read -r _line; do
             detail "${_line}"
         done < "${_list}"
