@@ -21,6 +21,5 @@ modules:
     install:
       packages:
         - ayugram-desktop
-        - quickemu
 
   - from-file: modules/finalize.yml

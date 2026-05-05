@@ -8,6 +8,7 @@ modules:
   - type: kargs
     kargs:
       - rd.luks.options=tpm2-device=auto,fido2-device=auto
+      - kvm.ignore_msrs=1
 
   - type: fonts
     fonts:
@@ -71,6 +72,7 @@ modules:
         - gparted
         - xeyes
         - chezmoi
+        - quickemu
         - podman-compose
         - podlet
       exclude:
