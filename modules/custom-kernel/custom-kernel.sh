@@ -360,30 +360,6 @@ if [ "${NVIDIA}" = "true" ]; then
     semodule -i nvidia-container.pp
     rm -f nvidia-container.pp
 
-    log "Installing Nvidia container toolkit service and preset."
-    mkdir -p /usr/lib/systemd/system
-    cat <<'EOF' > /usr/lib/systemd/system/nvctk-cdi.service
-[Unit]
-Description=NVIDIA Container Toolkit CDI auto-generation
-ConditionFileIsExecutable=/usr/bin/nvidia-ctk
-ConditionPathExists=!/etc/cdi/nvidia.yaml
-After=local-fs.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    chmod 0644 /usr/lib/systemd/system/nvctk-cdi.service
-
-    mkdir -p /usr/lib/systemd/system-preset
-    cat <<'EOF' > /usr/lib/systemd/system-preset/70-nvctk-cdi.preset
-enable nvctk-cdi.service
-EOF
-    chmod 0644 /usr/lib/systemd/system-preset/70-nvctk-cdi.preset
-
     mkdir -p /etc/modprobe.d
     cat <<'EOF' > /etc/modprobe.d/nvidia.conf
 blacklist nouveau

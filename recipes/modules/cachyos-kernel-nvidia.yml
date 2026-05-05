@@ -17,5 +17,4 @@ modules:
   - type: systemd
     system:
       enabled:
-        - nvidia-cdi-refresh.path
         - nvidia-cdi-refresh.service
