@@ -4,7 +4,7 @@ name: obedur-os-selfuse
 description: This is my personal self-use OS image.
 
 base-image: ghcr.io/blue-build/base-images/fedora-base
-image-version: 43
+image-version: 44
 
 modules:
   - from-file: modules/bootstrap.yml

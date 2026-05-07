@@ -305,6 +305,10 @@ if [ "${NVIDIA}" = "true" ]; then
         https://negativo17.org/repos/fedora-nvidia.repo \
         -o /etc/yum.repos.d/fedora-nvidia.repo
 
+    if ! [ -f /etc/pki/tls/certs/ca-bundle.crt ]; then
+        ln /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem /etc/pki/tls/certs/ca-bundle.crt
+    fi
+
     log "Building Nvidia kernel modules."
     disable_akmodsbuild || exit 1
 

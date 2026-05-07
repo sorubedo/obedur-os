@@ -5,7 +5,7 @@ name: obedur-os-nvidia
 description: This is my personal OS image.
 
 base-image: ghcr.io/blue-build/base-images/fedora-base
-image-version: 43
+image-version: 44
 
 modules:
   - from-file: modules/bootstrap.yml
