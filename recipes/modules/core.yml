@@ -67,7 +67,6 @@ modules:
         - qt5ct
         - qt6ct
         - steam-devices
-        - steam-device-rules
         - seahorse
         - gparted
         - xeyes

@@ -62,7 +62,7 @@ Obedur-OS 是基于 [BlueBuild](https://blue-build.org/) 构建的 Fedora Atomic
 
 | 组件 | 选择 |
 | :--- | :--- |
-| 基础系统 | Fedora Atomic 43 |
+| 基础系统 | Fedora Atomic 44 |
 | 构建框架 | BlueBuild |
 | Wayland 合成器 | [Niri](https://github.com/YaLTeR/niri)（滚动平铺） |
 | 桌面 Shell | [Noctalia Shell](https://docs.noctalia.dev/)（基于 quickshell） |
