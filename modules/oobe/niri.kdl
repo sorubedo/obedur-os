@@ -1,0 +1,28 @@
+input {
+    mouse {
+        off
+    }
+
+    trackpoint {
+        off
+    }
+
+    trackball {
+        off
+    }
+
+    tablet {
+        off
+    }
+
+    touch {
+        off
+    }
+}
+
+window-rule {
+    match app-id="com.mitchellh.ghostty"
+    open-fullscreen true
+}
+
+spawn-sh-at-startup "ghostty -e /usr/bin/oobe-wizard; niri msg action quit"

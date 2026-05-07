@@ -1,0 +1,7 @@
+name: oobe
+shortdesc: Out-Of-Box Experience — first-boot user creation and setup wizardry.
+example: |
+  type: oobe
+  exec: /usr/bin/niri-session
+  env:
+      NIRI_CONFIG: /usr/share/oobe/niri.kdl
