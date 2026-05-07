@@ -71,18 +71,30 @@ mkdir -p /usr/lib/systemd/system
 cat > /usr/lib/systemd/system/oobe.service <<SVC_EOF
 [Unit]
 Description=OOBE Initial Setup
-After=systemd-user-sessions.service dbus.socket
+After=systemd-user-sessions.service dbus.socket systemd-logind.service
+After=systemd-vconsole-setup.service
+Wants=getty-pre.target
+Wants=dbus.socket systemd-logind.service
 Before=getty-pre.target
 Before=display-manager.service
+Conflicts=display-manager.service initial-setup-text.service initial-setup-graphical.service initial-setup.service
 ConditionKernelCommandLine=!rd.live.image
 ConditionPathExists=!/var/.oobe-done
 
 [Service]
 Type=oneshot
+TimeoutSec=0
 RemainAfterExit=no
 User=oobe
 PAMName=oobe
 ${ENV_LINES}ExecStart=${EXEC}
+StandardInput=tty-fail
+TTYPath=/dev/tty1
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+UtmpIdentifier=tty1
+UtmpMode=user
 
 [Install]
 WantedBy=multi-user.target
