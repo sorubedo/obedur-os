@@ -1,8 +1,8 @@
-input {
-    mouse {
-        off
-    }
+hotkey-overlay {
+    skip-at-startup
+}
 
+input {
     trackpoint {
         off
     }
@@ -25,4 +25,4 @@ window-rule {
     open-fullscreen true
 }
 
-spawn-sh-at-startup "ghostty -e /usr/bin/oobe-wizard; niri msg action quit"
+spawn-sh-at-startup "ghostty -e /usr/bin/oobe-wizard; niri msg action quit -s"

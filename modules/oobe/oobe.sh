@@ -79,7 +79,7 @@ polkit.addRule(function(action, subject) {
     if (action.id == "org.freedesktop.policykit.exec" &&
         subject.isInGroup("oobe")) {
         var program = action.lookup("program");
-        if (program == "/usr/sbin/useradd" || program == "/usr/sbin/chpasswd" || program == "/usr/bin/touch") {
+        if (program == "/usr/sbin/useradd" || program == "/usr/bin/chpasswd" || program == "/usr/bin/touch") {
             return polkit.Result.YES;
         }
     }
@@ -92,10 +92,10 @@ mkdir -p /usr/lib/systemd/system
 cat > /usr/lib/systemd/system/oobe.service <<SVC_EOF
 [Unit]
 Description=OOBE Initial Setup
-After=systemd-user-sessions.service dbus.socket systemd-logind.service systemd-vconsole-setup.service
+After=systemd-user-sessions.service dbus.socket systemd-logind.service systemd-vconsole-setup.service plymouth-quit-wait.service
 Wants=getty-pre.target dbus.socket systemd-logind.service
 Before=getty-pre.target display-manager.service
-Conflicts=display-manager.service initial-setup-text.service initial-setup-graphical.service initial-setup.service
+Conflicts=initial-setup-text.service initial-setup-graphical.service initial-setup.service plymouth-quit-wait.service
 ConditionKernelCommandLine=!rd.live.image
 ConditionPathExists=!/var/.oobe-done
 
@@ -105,6 +105,7 @@ TimeoutSec=0
 RemainAfterExit=no
 User=oobe
 PAMName=oobe
+ExecStartPre=-/bin/plymouth quit
 ExecStartPre=+sh -c "exec chvt 7"
 ${ENV_LINES}
 ExecStart=${EXEC}
@@ -118,6 +119,7 @@ UtmpMode=user
 StandardInput=tty-fail
 
 [Install]
+WantedBy=graphical.target
 WantedBy=multi-user.target
 SVC_EOF
 

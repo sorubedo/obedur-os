@@ -2,6 +2,6 @@ name: oobe
 shortdesc: Out-Of-Box Experience — first-boot user creation and setup wizardry.
 example: |
   type: oobe
-  exec: /usr/bin/niri-session
+  exec: dbus-run-session niri
   env:
       NIRI_CONFIG: /usr/share/obedur-dotfiles/niri/oobe.kdl

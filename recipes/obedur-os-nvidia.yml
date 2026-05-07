@@ -18,7 +18,7 @@ modules:
 
   - type: oobe
     source: local
-    exec: /usr/bin/niri-session
+    exec: dbus-run-session niri
     env:
       NIRI_CONFIG: /usr/share/obedur-dotfiles/niri/oobe.kdl
 
