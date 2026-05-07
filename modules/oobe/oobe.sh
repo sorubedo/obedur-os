@@ -15,6 +15,27 @@ cat > /usr/lib/sysusers.d/oobe.conf <<EOF
 u     oobe   -     "OOBE Setup User" /var/lib/oobe   /usr/sbin/nologin
 EOF
 
+# --- tmpfiles.d (为 oobe 用户创建主目录) ---
+mkdir -p /usr/lib/tmpfiles.d
+cat > /usr/lib/tmpfiles.d/oobe.conf <<EOF
+d /var/lib/oobe 0750 oobe oobe - -
+Z /var/lib/oobe - oobe oobe - -
+EOF
+
+# --- pam.d ---
+mkdir -p /etc/pam.d
+cat > /etc/pam.d/oobe <<EOF
+#%PAM-1.0
+auth       required     pam_permit.so
+account    required     pam_permit.so
+password   required     pam_permit.so
+session    required     pam_selinux.so close
+session    required     pam_loginuid.so
+session    required     pam_selinux.so open
+session    optional     pam_keyinit.so force revoke
+session    required     pam_systemd.so
+EOF
+
 # --- oobe-wizard ---
 cat > /usr/bin/oobe-wizard <<'EOF'
 #!/usr/bin/env bash
@@ -65,18 +86,15 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 
-# --- systemd service ---
+# 生成 systemd service ---
 mkdir -p /usr/lib/systemd/system
 
 cat > /usr/lib/systemd/system/oobe.service <<SVC_EOF
 [Unit]
 Description=OOBE Initial Setup
-After=systemd-user-sessions.service dbus.socket systemd-logind.service
-After=systemd-vconsole-setup.service
-Wants=getty-pre.target
-Wants=dbus.socket systemd-logind.service
-Before=getty-pre.target
-Before=display-manager.service
+After=systemd-user-sessions.service dbus.socket systemd-logind.service systemd-vconsole-setup.service
+Wants=getty-pre.target dbus.socket systemd-logind.service
+Before=getty-pre.target display-manager.service
 Conflicts=display-manager.service initial-setup-text.service initial-setup-graphical.service initial-setup.service
 ConditionKernelCommandLine=!rd.live.image
 ConditionPathExists=!/var/.oobe-done
@@ -87,14 +105,17 @@ TimeoutSec=0
 RemainAfterExit=no
 User=oobe
 PAMName=oobe
-${ENV_LINES}ExecStart=${EXEC}
-StandardInput=tty-fail
-TTYPath=/dev/tty1
+ExecStartPre=+sh -c "exec chvt 7"
+${ENV_LINES}
+ExecStart=${EXEC}
+ExecStopPost=+sh -c "exec chvt 1"
+TTYPath=/dev/tty7
 TTYReset=yes
 TTYVHangup=yes
 TTYVTDisallocate=yes
-UtmpIdentifier=tty1
+UtmpIdentifier=tty7
 UtmpMode=user
+StandardInput=tty-fail
 
 [Install]
 WantedBy=multi-user.target
