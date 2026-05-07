@@ -65,10 +65,6 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 
-# --- niri config ---
-mkdir -p /usr/share/oobe
-cp modules/oobe/niri.kdl /usr/share/oobe/niri.kdl
-
 # --- systemd service ---
 mkdir -p /usr/lib/systemd/system
 

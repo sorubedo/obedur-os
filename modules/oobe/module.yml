@@ -4,4 +4,4 @@ example: |
   type: oobe
   exec: /usr/bin/niri-session
   env:
-      NIRI_CONFIG: /usr/share/oobe/niri.kdl
+      NIRI_CONFIG: /usr/share/obedur-dotfiles/niri/oobe.kdl
