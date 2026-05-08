@@ -5,7 +5,7 @@ on:
 jobs:
   build-iso:
     name: Build ISO
-    runs-on: fedora-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Build ISO
         uses: jasonn3/build-container-installer@main
