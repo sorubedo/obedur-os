@@ -9,7 +9,6 @@ example: |
   sign:                 # Optional — omit the entire block to disable SecureBoot signing
     key: /tmp/certs/MOK.key
     cert: /tmp/certs/MOK.pem
-    mok-password: BlueBuild
   secrets:
   - type: file
     source: ./MOK.key

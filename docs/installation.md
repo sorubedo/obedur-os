@@ -87,7 +87,7 @@ Obedur-OS 使用 CachyOS 内核，所有内核模块（v4l2loopback、NVIDIA 等
 curl -fsSL https://raw.githubusercontent.com/sorubedo/obedur-os/main/scripts/enroll-mok.sh | sudo bash
 ```
 
-> 如果 SecureBoot 处于关闭状态，脚本会自动跳过导入，仅创建标记文件防止内置服务重复运行。
+> 如果 SecureBoot 处于关闭状态，脚本会自动跳过导入。
 
 执行后正常重启，重启时会进入蓝色背景的 **MOK Manager** 界面：
 
@@ -101,7 +101,7 @@ curl -fsSL https://raw.githubusercontent.com/sorubedo/obedur-os/main/scripts/enr
 
 重启后 MOK 证书已写入主板，后续内核更新无需再次操作。
 
-> 如果跳过此步骤，系统内置的 `mok-enroll.service` 也会在首次启动时自动导入 MOK 证书（密码同上），但需要**额外多重启一次**才能完成注册流程。
+> 如果 SecureBoot 处于关闭状态，脚本会自动跳过导入。
 
 ## 首次设置
 

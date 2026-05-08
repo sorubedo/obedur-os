@@ -15,19 +15,17 @@ INITRAMFS=$(printf '%s' "$1"   | jq -r '.initramfs // false')
 NVIDIA=$(printf '%s' "$1"      | jq -r '.nvidia // false')
 SIGNING_KEY=$(printf '%s' "$1" | jq -r '.sign.key // ""')
 SIGNING_CERT=$(printf '%s' "$1"| jq -r '.sign.cert // ""')
-MOK_PASSWORD=$(printf '%s' "$1"| jq -r '.sign["mok-password"] // ""')
 SECURE_BOOT=false
 
-if [ -z "${SIGNING_KEY}" ] && [ -z "${SIGNING_CERT}" ] && [ -z "${MOK_PASSWORD}" ]; then
+if [ -z "${SIGNING_KEY}" ] && [ -z "${SIGNING_CERT}" ]; then
     log "SecureBoot signing disabled."
-elif [ -f "${SIGNING_KEY}" ] && [ -f "${SIGNING_CERT}" ] && [ -n "${MOK_PASSWORD}" ]; then
+elif [ -f "${SIGNING_KEY}" ] && [ -f "${SIGNING_CERT}" ]; then
     SECURE_BOOT=true
     log "SecureBoot signing enabled."
 else
     err "Invalid signing config:"
-    err "  sign.key:          ${SIGNING_KEY:-<empty>}"
-    err "  sign.cert:         ${SIGNING_CERT:-<empty>}"
-    err "  sign.mok-password: ${MOK_PASSWORD:-<empty>}"
+    err "  sign.key:  ${SIGNING_KEY:-<empty>}"
+    err "  sign.cert: ${SIGNING_CERT:-<empty>}"
     exit 1
 fi
 
@@ -187,37 +185,6 @@ sign_kernel_modules() {
         esac
     done <"${_tmplist}"
     rm -f "${_tmplist}"
-}
-
-create_mok_enroll_unit() {
-    _mok_cert="/usr/share/cert/MOK.der"
-    _unit_file="/usr/lib/systemd/system/mok-enroll.service"
-    _tmp=$(mktemp)
-    openssl x509 -in "${SIGNING_CERT}" -outform DER -out "${_tmp}" \
-        || { rm -f "${_tmp}"; return 1; }
-    mkdir -p "$(dirname "${_mok_cert}")"
-    cp "${_tmp}" "${_mok_cert}"
-    chmod 0644 "${_mok_cert}"
-    rm -f "${_tmp}"
-    mkdir -p "$(dirname "${_unit_file}")"
-    cat <<EOF > "${_unit_file}"
-[Unit]
-Description=Enroll MOK key on first boot
-ConditionPathExists=${_mok_cert}
-ConditionPathExists=!/var/.mok-enrolled
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c '(echo "${MOK_PASSWORD}"; echo "${MOK_PASSWORD}") | mokutil --import "${_mok_cert}"'
-ExecStartPost=/usr/bin/touch /var/.mok-enrolled
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    chmod 0644 "${_unit_file}"
-    systemctl -f enable mok-enroll.service
-    log "Created and enabled mok-enroll.service"
 }
 
 # ---------------------------------------------------------------------------
@@ -402,9 +369,6 @@ if [ "${SECURE_BOOT}" = "true" ]; then
 
     log "Signing kernel modules."
     sign_kernel_modules || exit 1
-
-    log "Creating MOK enroll unit."
-    create_mok_enroll_unit || exit 1
 fi
 
 # ---------------------------------------------------------------------------
