@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+
+FONT="$1"
+if [ -z "$FONT" ]; then
+    echo "Usage: oobe-set-vconsole <font-name>" >&2
+    exit 1
+fi
+
+if grep -q '^FONT=' /etc/vconsole.conf 2>/dev/null; then
+    sed -i "s/^FONT=.*/FONT=$FONT/" /etc/vconsole.conf
+else
+    printf 'FONT=%s\n' "$FONT" >> /etc/vconsole.conf
+fi

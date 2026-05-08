@@ -1,3 +1,12 @@
+prefer-no-csd
+
+cursor {
+    xcursor-theme "Bibata-Modern-Ice"
+    xcursor-size 24
+
+    hide-when-typing
+}
+
 hotkey-overlay {
     skip-at-startup
 }
@@ -21,8 +30,7 @@ input {
 }
 
 window-rule {
-    match app-id="com.mitchellh.ghostty"
-    open-fullscreen true
+    open-floating true
 }
 
 spawn-sh-at-startup "ghostty -e /usr/bin/oobe-wizard; niri msg action quit -s"

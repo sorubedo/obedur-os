@@ -1,0 +1,595 @@
+#!/usr/bin/env python3
+import curses
+import grp
+import os
+import pwd
+import re
+import shutil
+import signal
+import socket
+import subprocess
+import sys
+
+# --- Localization (i18n) ---
+STRINGS = {
+    "en": {
+        "welcome": "Welcome to Obedur-OS",
+        "lang_select": "Select Language",
+        "hostname_title": "Network Configuration",
+        "hostname_prompt": "Hostname (leave empty to skip):",
+        "user_title": "User Creation",
+        "username_prompt": "Username:",
+        "password_prompt": "Password:",
+        "shell_title": "Login Shell",
+        "shell_fish": "fish (recommended)",
+        "shell_bash": "bash",
+        "confirm_prompt": "Confirm Password:",
+        "processing_title": "Processing",
+        "processing": "Setting up your system...",
+        "success_title": "Setup Complete",
+        "success_msg": "System configured successfully!",
+        "success_oobe_disabled": "OOBE will be disabled on next boot.",
+        "success_oobe_rerun": "To re-run: delete /var/.oobe-done and reboot.",
+        "success_enter_tuigreet": 'Press F3 -> "niri-obedur" to start the Niri session.',
+        "error_title": "Error",
+        "retry_msg": "Press any key to continue.",
+        "exit_msg": "Press any key to exit.",
+        "invalid_user": "Invalid username. (Lowercase, numbers, -, _)",
+        "user_exists": "A user with this name already exists.",
+        "admin_title": "Administrator",
+        "admin_yes": "Yes (wheel group)",
+        "admin_no": "No (regular user)",
+        "root_password_title": "Root Password",
+        "root_password_prompt": "New root password (empty to skip):",
+        "root_password_confirm": "Confirm root password:",
+        "root_password_required": "No admin user exists. Root password cannot be skipped.",
+        "invalid_host": "Invalid hostname.",
+        "mismatch": "Passwords do not match.",
+        "empty_input": "Input cannot be empty.",
+        "empty_pass": "Password cannot be empty.",
+        "existing_user_title": "User Detected",
+        "existing_user_msg": "A human user already exists in the system.",
+        "skip_prompt": "Skip user creation? (y/N)",
+        "too_small": "Terminal too small!",
+        "footer_hint": "Confirm",
+        "tty_font_title": "TTY Console Font",
+        "tty_font_v16n": "ter-v16n (1080p)",
+        "tty_font_v28n": "ter-v28n (1440p/4K)",
+        "tty_font_v32n": "ter-v32n (4K+)",
+        "tty_font_skip": "Skip (keep default)",
+    },
+    "zh": {
+        "welcome": "欢迎使用 Obedur-OS",
+        "lang_select": "选择语言 / Select Language",
+        "hostname_title": "网络配置",
+        "hostname_prompt": "主机名 (留空跳过):",
+        "user_title": "创建用户",
+        "username_prompt": "用户名:",
+        "password_prompt": "密码:",
+        "shell_title": "登录 Shell",
+        "shell_fish": "fish (推荐)",
+        "shell_bash": "bash",
+        "confirm_prompt": "确认密码:",
+        "processing_title": "处理中",
+        "processing": "正在配置系统，请稍候...",
+        "success_title": "设置完成",
+        "success_msg": "系统已成功配置！",
+        "success_oobe_disabled": "OOBE 将在下次启动时禁用。",
+        "success_oobe_rerun": "重新运行 OOBE: 删除 /var/.oobe-done 并重启。",
+        "success_enter_tuigreet": '按 F3 选择 "niri-obedur" 进入预配置的 Niri 会话。',
+        "error_title": "错误",
+        "retry_msg": "按任意键继续。",
+        "exit_msg": "按任意键退出。",
+        "invalid_user": "用户名无效 (仅限小写、数字、-、_)",
+        "user_exists": "此用户名已存在。",
+        "admin_title": "管理员",
+        "admin_yes": "是 (wheel 组)",
+        "admin_no": "否 (普通用户)",
+        "root_password_title": "Root 密码",
+        "root_password_prompt": "新的 root 密码 (留空跳过):",
+        "root_password_confirm": "确认 root 密码:",
+        "root_password_required": "没有管理员用户, 不能跳过设置 root 密码。",
+        "invalid_host": "主机名无效。",
+        "mismatch": "两次输入的密码不一致。",
+        "empty_input": "输入不能为空。",
+        "empty_pass": "密码不能为空。",
+        "existing_user_title": "检测到用户",
+        "existing_user_msg": "系统中已存在 UID >= 1000 的普通用户。",
+        "skip_prompt": "是否跳过用户创建步骤？(y/N)",
+        "too_small": "窗口太小！",
+        "footer_hint": "确认",
+        "tty_font_title": "TTY 控制台字体",
+        "tty_font_v16n": "ter-v16n (1080p)",
+        "tty_font_v28n": "ter-v28n (1440p/4K)",
+        "tty_font_v32n": "ter-v32n (4K+)",
+        "tty_font_skip": "跳过 (保持默认)",
+    }
+}
+
+class OOBEApp:
+    def __init__(self, stdscr):
+        # Ignore Ctrl+C
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        
+        self.stdscr = stdscr
+        self.lang = "zh"
+        self.hostname = ""
+        self.username = ""
+        self.password = ""
+        self.shell = "/usr/bin/fish"
+        self.is_admin = True
+        self.root_password = ""
+        self.tty_font = None
+
+        # Colors
+        curses.start_color()
+        curses.use_default_colors()
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)   # Normal dialog
+        curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_RED)    # Error dialog
+        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLUE)    # Header / Branding
+        curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_CYAN)   # Footer / Hints
+        curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_BLACK)  # Shadow effect
+        
+        curses.curs_set(0)
+        self.stdscr.keypad(True)
+        self.stdscr.nodelay(False)
+
+    def t(self, key):
+        return STRINGS[self.lang].get(key, key)
+
+    def get_width(self, s):
+        """Estimate display width of a string, accounting for CJK characters."""
+        w = 0
+        for ch in s:
+            if ord(ch) > 0x2e80: # CJK range start
+                w += 2
+            else:
+                w += 1
+        return w
+
+    def draw_background(self):
+        self.stdscr.erase()
+        self.stdscr.bkgd(curses.color_pair(1))
+        height, width = self.stdscr.getmaxyx()
+
+        # Header
+        branding = " OBEDUR-OS "
+        self.stdscr.attron(curses.color_pair(3) | curses.A_BOLD)
+        self.stdscr.addstr(0, 2, branding)
+        self.stdscr.addstr(0, width - 2 - len("OOBE WIZARD"), "OOBE WIZARD")
+        self.stdscr.hline(1, 0, curses.ACS_HLINE, width)
+        self.stdscr.attroff(curses.color_pair(3) | curses.A_BOLD)
+
+        # Footer
+        footer_text = f" [ENTER] {self.t('footer_hint')} "
+            
+        self.stdscr.attron(curses.color_pair(4))
+        try:
+            # Use ljust(width-1) to avoid the bottom-right corner wrap error
+            self.stdscr.addstr(height-1, 0, footer_text.ljust(width-1))
+            # Safely add the last space
+            self.stdscr.insstr(height-1, width-1, " ")
+        except curses.error:
+            pass
+        self.stdscr.attroff(curses.color_pair(4))
+        self.stdscr.refresh()
+
+    def draw_box(self, title, lines, color_pair=1):
+        self.draw_background()
+        height, width = self.stdscr.getmaxyx()
+        
+        box_width = max(self.get_width(line) for line in lines + [title]) + 12
+        box_width = max(box_width, 50)
+        box_height = len(lines) + 8
+        
+        # Check if terminal is too small for the box
+        if height < box_height + 2 or width < box_width + 2:
+            msg = self.t("too_small")
+            msg_w = self.get_width(msg)
+            try:
+                self.stdscr.addstr(height // 2, (width - msg_w) // 2, msg, curses.A_BOLD | curses.A_REVERSE)
+                self.stdscr.refresh()
+            except: pass
+            # Return stdscr as a dummy win, it handles getch() but doesn't draw a box
+            return self.stdscr, 0, 0, height, width
+
+        start_y = (height - box_height) // 2
+        start_x = (width - box_width) // 2
+        
+        # Shadow (only if it fits within terminal bounds)
+        if start_x + 2 + box_width <= width and start_y + 1 + box_height <= height:
+            shadow_win = curses.newwin(box_height, box_width, start_y + 1, start_x + 2)
+            shadow_win.bkgd(curses.color_pair(5))
+            shadow_win.erase()
+            shadow_win.refresh()
+
+        # Dialog Window
+        win = curses.newwin(box_height, box_width, start_y, start_x)
+        win.keypad(True)
+        win.bkgd(curses.color_pair(color_pair))
+        win.box()
+        
+        # Double line title
+        win.attron(curses.A_BOLD)
+        title_str = f" {title.upper()} "
+        win.addstr(0, (box_width - self.get_width(title_str)) // 2, title_str)
+        win.attroff(curses.A_BOLD)
+        
+        for i, line in enumerate(lines):
+            try:
+                # Centering using display width
+                win.addstr(i + 3, (box_width - self.get_width(line)) // 2, line)
+            except: pass
+            
+        win.refresh()
+        return win, start_y, start_x, box_height, box_width
+
+    def show_welcome(self):
+        logo = [
+            r"         __             __                           ",
+            r"  ____  / /_  ___  ____/ /_  _______      ____  _____",
+            r" / __ \/ __ \/ _ \/ __  / / / / ___/_____/ __ \/ ___/",
+            r"/ /_/ / /_/ /  __/ /_/ / /_/ / /  /_____/ /_/ (__  ) ",
+            r"\____/_.___/\___/\__,_/\__,_|_/         \____/____/ "
+        ]
+        while True:
+            win, y, x, h, w = self.draw_box(self.t("welcome"), logo + ["", "Press any key to start the setup wizard..."])
+            ch = win.getch()
+            if ch == curses.KEY_RESIZE:
+                continue
+            break
+
+    def get_input(self, title, prompt, secret=False, validator=None, error_msg="", default=""):
+        field_width = 30
+        input_str = default
+        while True:
+            # Layout: Prompt, empty line, then the input field area
+            win, y, x, h, w = self.draw_box(title, [prompt, "", " " * field_width])
+            curses.curs_set(1)
+            
+            # Input field at line 5 (i=2 in lines list above)
+            input_y = 5 
+            input_x = (w - field_width) // 2
+            
+            done = False
+            while True:
+                # Draw input field box (reversed)
+                win.attron(curses.A_REVERSE)
+                win.addstr(input_y, input_x, " " * field_width)
+                
+                display_str = ("*" * len(input_str) if secret else input_str)
+                if len(display_str) > field_width - 2:
+                    display_str = display_str[-(field_width - 2):]
+                
+                win.addstr(input_y, input_x + 1, display_str)
+                win.attroff(curses.A_REVERSE)
+                win.move(input_y, input_x + 1 + len(display_str))
+                win.refresh()
+                
+                ch = win.getch()
+                if ch == curses.KEY_RESIZE:
+                    break # Re-draw entire box
+                elif ch in (10, 13): # Enter
+                    done = True
+                    break
+                elif ch in (curses.KEY_BACKSPACE, 127, 8):
+                    input_str = input_str[:-1]
+                elif 32 <= ch <= 126:
+                    input_str += chr(ch)
+            
+            if not done: # Was a resize
+                continue
+
+            curses.curs_set(0)
+            if validator:
+                if validator(input_str):
+                    return input_str
+                else:
+                    self.message_box(self.t("error_title"), [error_msg or self.t("error_title")])
+            else:
+                if input_str.strip() or secret:
+                    return input_str
+                else:
+                    self.message_box(self.t("error_title"), [self.t("empty_input")])
+
+    def message_box(self, title, lines, color_pair=1, exit_msg=False):
+        prompt = self.t("exit_msg") if exit_msg else self.t("retry_msg")
+        while True:
+            win, y, x, h, w = self.draw_box(title, lines + ["", f" > {prompt}"], color_pair=color_pair)
+            ch = win.getch()
+            if ch == curses.KEY_RESIZE:
+                continue
+            break
+
+    def select_lang(self):
+        options = [("简体中文", "zh"), ("English", "en")]
+        idx = 0
+        while True:
+            # Find max display width of option names to align markers
+            max_n_w = max(self.get_width(n) for n, _ in options)
+            
+            lines = []
+            for i, (name, _) in enumerate(options):
+                # Pad spaces based on display width difference
+                padding = " " * (max_n_w - self.get_width(name))
+                label = f"{name}{padding}"
+                if i == idx:
+                    lines.append(f" [*] {label} ")
+                else:
+                    lines.append(f" [ ] {label} ")
+            
+            win, y, x, h, w = self.draw_box(STRINGS["en"]["lang_select"], lines)
+            ch = win.getch()
+            if ch == curses.KEY_RESIZE:
+                continue
+            if ch == curses.KEY_UP:
+                idx = (idx - 1) % len(options)
+            elif ch == curses.KEY_DOWN:
+                idx = (idx + 1) % len(options)
+            elif ch in (10, 13):
+                self.lang = options[idx][1]
+                return
+
+    def select_shell(self):
+        options = [
+            (self.t("shell_fish"), "/usr/bin/fish"),
+            (self.t("shell_bash"), "/usr/bin/bash"),
+        ]
+        idx = 0
+        while True:
+            max_n_w = max(self.get_width(n) for n, _ in options)
+            lines = []
+            for i, (name, _) in enumerate(options):
+                padding = " " * (max_n_w - self.get_width(name))
+                label = f"{name}{padding}"
+                if i == idx:
+                    lines.append(f" [*] {label} ")
+                else:
+                    lines.append(f" [ ] {label} ")
+
+            win, y, x, h, w = self.draw_box(self.t("shell_title"), lines)
+            ch = win.getch()
+            if ch == curses.KEY_RESIZE:
+                continue
+            if ch == curses.KEY_UP:
+                idx = (idx - 1) % len(options)
+            elif ch == curses.KEY_DOWN:
+                idx = (idx + 1) % len(options)
+            elif ch in (10, 13):
+                self.shell = options[idx][1]
+                return
+
+    def select_admin(self):
+        options = [
+            (self.t("admin_yes"), True),
+            (self.t("admin_no"), False),
+        ]
+        idx = 0
+        while True:
+            max_n_w = max(self.get_width(n) for n, _ in options)
+            lines = []
+            for i, (name, _) in enumerate(options):
+                padding = " " * (max_n_w - self.get_width(name))
+                label = f"{name}{padding}"
+                if i == idx:
+                    lines.append(f" [*] {label} ")
+                else:
+                    lines.append(f" [ ] {label} ")
+
+            win, y, x, h, w = self.draw_box(self.t("admin_title"), lines)
+            ch = win.getch()
+            if ch == curses.KEY_RESIZE:
+                continue
+            if ch == curses.KEY_UP:
+                idx = (idx - 1) % len(options)
+            elif ch == curses.KEY_DOWN:
+                idx = (idx + 1) % len(options)
+            elif ch in (10, 13):
+                self.is_admin = options[idx][1]
+                return
+
+    def select_tty_font(self):
+        options = [
+            (self.t("tty_font_v16n"), "ter-v16n"),
+            (self.t("tty_font_v28n"), "ter-v28n"),
+            (self.t("tty_font_v32n"), "ter-v32n"),
+            (self.t("tty_font_skip"), None),
+        ]
+        idx = 0
+        while True:
+            max_n_w = max(self.get_width(n) for n, _ in options)
+            lines = []
+            for i, (name, _) in enumerate(options):
+                padding = " " * (max_n_w - self.get_width(name))
+                label = f"{name}{padding}"
+                if i == idx:
+                    lines.append(f" [*] {label} ")
+                else:
+                    lines.append(f" [ ] {label} ")
+
+            win, y, x, h, w = self.draw_box(self.t("tty_font_title"), lines)
+            ch = win.getch()
+            if ch == curses.KEY_RESIZE:
+                continue
+            if ch == curses.KEY_UP:
+                idx = (idx - 1) % len(options)
+            elif ch == curses.KEY_DOWN:
+                idx = (idx + 1) % len(options)
+            elif ch in (10, 13):
+                self.tty_font = options[idx][1]
+                return
+
+    def _has_admin(self):
+        """Check if any UID >= 1000 user is in the wheel group."""
+        try:
+            wheel_grp = grp.getgrnam("wheel")
+            for member in wheel_grp.gr_mem:
+                try:
+                    if pwd.getpwnam(member).pw_uid >= 1000:
+                        return True
+                except KeyError:
+                    pass
+        except KeyError:
+            pass
+        return False
+
+    def run_commands(self, skip_user=False):
+        win, y, x, h, w = self.draw_box(self.t("processing_title"), [self.t("processing")])
+        win.refresh()
+
+        try:
+            # 1. Set Hostname (skip if empty)
+            if self.hostname:
+                subprocess.run(["pkexec", "hostnamectl", "set-hostname", self.hostname], check=True, capture_output=True)
+
+            # 2. Set TTY Console Font
+            if self.tty_font:
+                subprocess.run(["pkexec", "/usr/bin/oobe-set-vconsole", self.tty_font], check=True, capture_output=True)
+
+            if not skip_user:
+                # 3. Create User
+                useradd_args = ["pkexec", "useradd", "-m", "-s", self.shell]
+                if self.is_admin:
+                    useradd_args.extend(["-G", "wheel"])
+                useradd_args.append(self.username)
+                subprocess.run(useradd_args, check=True, capture_output=True)
+
+                # 3. Set Password
+                subprocess.run(["pkexec", "chpasswd"], input=f"{self.username}:{self.password}".encode(), check=True, capture_output=True)
+
+            # 4. Set Root Password
+            if self.root_password:
+                subprocess.run(["pkexec", "chpasswd"], input=f"root:{self.root_password}".encode(), check=True, capture_output=True)
+
+            # 5. Cleanup oobe home directory (only if running as oobe:oobe)
+            try:
+                oobe_pw = pwd.getpwnam("oobe")
+                if os.getuid() == oobe_pw.pw_uid and os.getgid() == oobe_pw.pw_gid:
+                    home = oobe_pw.pw_dir
+                    if os.path.isdir(home):
+                        for name in os.listdir(home):
+                            path = os.path.join(home, name)
+                            if os.path.isdir(path) and not os.path.islink(path):
+                                shutil.rmtree(path)
+                            else:
+                                os.unlink(path)
+            except Exception:
+                pass
+
+            # 6. Mark Done
+            subprocess.run(["pkexec", "touch", "/var/.oobe-done"], check=True, capture_output=True)
+
+            return True
+        except subprocess.CalledProcessError as e:
+            err = e.stderr.decode() if e.stderr else str(e)
+            self.message_box(self.t("error_title"), [err], color_pair=2)
+            return False
+
+    def check_existing_users(self):
+        try:
+            for p in pwd.getpwall():
+                if p.pw_uid >= 1000 and p.pw_name not in ("nobody", "oobe"):
+                    return True
+        except Exception:
+            pass
+        return False
+
+    def run(self):
+        self.select_lang()
+
+        skip_user = False
+        if self.check_existing_users():
+            while True:
+                win, y, x, h, w = self.draw_box(self.t("existing_user_title"), [self.t("existing_user_msg"), "", self.t("skip_prompt")])
+                ch = win.getch()
+                if ch == curses.KEY_RESIZE:
+                    continue
+                if ch in (ord('y'), ord('Y')):
+                    skip_user = True
+                break
+
+        self.show_welcome()
+
+        # Hostname
+        try:
+            current_host = socket.gethostname()
+        except:
+            current_host = ""
+
+        self.hostname = self.get_input(
+            self.t("hostname_title"),
+            self.t("hostname_prompt"),
+            validator=lambda s: not s or re.match(r"^[a-zA-Z0-9-]{1,63}$", s),
+            error_msg=self.t("invalid_host"),
+            default=current_host
+        )
+
+        self.select_tty_font()
+
+        if not skip_user:
+            # Username
+            while True:
+                self.username = self.get_input(
+                    self.t("user_title"),
+                    self.t("username_prompt"),
+                    validator=lambda s: re.match(r"^[a-z_][a-z0-9_-]*$", s),
+                    error_msg=self.t("invalid_user")
+                )
+                try:
+                    pwd.getpwnam(self.username)
+                    self.message_box(self.t("error_title"), [self.t("user_exists")], color_pair=2)
+                except KeyError:
+                    break
+
+            self.select_shell()
+
+            self.select_admin()
+
+            # Password
+            while True:
+                p1 = self.get_input(self.t("user_title"), self.t("password_prompt"), secret=True)
+                if not p1:
+                    self.message_box(self.t("error_title"), [self.t("empty_pass")], color_pair=2)
+                    continue
+                p2 = self.get_input(self.t("user_title"), self.t("confirm_prompt"), secret=True)
+                if p1 == p2:
+                    self.password = p1
+                    break
+                self.message_box(self.t("error_title"), [self.t("mismatch")], color_pair=2)
+
+        # Root password
+        admin_exists = self._has_admin() or (not skip_user and self.is_admin)
+        while True:
+            rp = self.get_input(self.t("root_password_title"), self.t("root_password_prompt"), secret=True)
+            if not rp:
+                if admin_exists:
+                    self.root_password = ""
+                    break
+                else:
+                    self.message_box(self.t("error_title"), [self.t("root_password_required")], color_pair=2)
+                    continue
+            rp2 = self.get_input(self.t("root_password_title"), self.t("root_password_confirm"), secret=True)
+            if rp == rp2:
+                self.root_password = rp
+                break
+            self.message_box(self.t("error_title"), [self.t("mismatch")], color_pair=2)
+
+        if self.run_commands(skip_user):
+            self.message_box(self.t("success_title"), [
+                self.t("success_msg"),
+                "",
+                self.t("success_oobe_disabled"),
+                self.t("success_oobe_rerun"),
+                self.t("success_enter_tuigreet"),
+            ], exit_msg=True)
+            sys.exit(0)
+        else:
+            self.message_box(self.t("error_title"), [self.t("exit_msg")], color_pair=2, exit_msg=True)
+            sys.exit(1)
+
+def main(stdscr):
+    app = OOBEApp(stdscr)
+    app.run()
+
+if __name__ == "__main__":
+    curses.wrapper(main)

@@ -103,27 +103,11 @@ curl -fsSL https://raw.githubusercontent.com/sorubedo/obedur-os/main/scripts/enr
 
 > 如果 SecureBoot 处于关闭状态，脚本会自动跳过导入。
 
-## 首次设置
+## 首次登录
 
-首次登录桌面后，运行以下命令开始交互式配置：
+OOBE 创建用户后，fish、starship、ghostty、niri override 等配置文件已通过 `/etc/skel` 自动分发到用户目录，无需额外设置。
 
-```bash
-blujust setup
-```
-
-脚本会逐步询问：
-
-| 步骤 | 说明 |
-| :--- | :--- |
-| **登录 Shell** | 询问是否切换到 fish（开箱即用的自动补全、语法高亮、模糊历史搜索） |
-| **fish 配置** | 复制 fish 配置到 `~/.config/fish/`，包含 starship 提示符 + fzf 按键绑定 + fastfetch 问候语 |
-| **starship 提示符** | 复制 `starship.toml`，彩色分段显示目录、git 分支、Node.js/Rust/Go/PHP 版本、当前时间 |
-| **ghostty 终端** | 复制 ghostty 配置到 `~/.config/ghostty/`，预设 MapleMono NF CN 字体 + noctalia 暗紫色主题 |
-| **niri 覆盖配置** | 复制 `override.kdl.example` 到 `~/.config/niri/override.kdl`，包含 fcitx5 输入法环境变量、Lavanda-Sea-Dark GTK 主题、触摸板/指点杆/触摸屏禁用、双显示器参考模板 |
-
-所有步骤默认为 **N**（跳过），按回车不执行。已存在的配置文件会再次确认是否覆盖。
-
-> `blujust setup` 可安全重复运行，所有配置复制到 `~/.config/` 下，不影响系统文件。
+如需自定义 niri 配置，编辑 `~/.config/niri/override.kdl`（已预置模板）。
 
 ## 更新与维护
 

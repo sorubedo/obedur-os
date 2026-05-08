@@ -36,41 +36,6 @@ session    optional     pam_keyinit.so force revoke
 session    required     pam_systemd.so
 EOF
 
-# --- oobe-wizard ---
-cat > /usr/bin/oobe-wizard <<'EOF'
-#!/usr/bin/env bash
-set -euo pipefail
-
-while true; do
-    read -r -p "用户名: " USERNAME
-    if [[ "${USERNAME}" =~ ^[a-z_][a-z0-9_-]*$ ]]; then
-        break
-    fi
-    echo "无效的用户名，必须以小写字母或下划线开头，仅包含小写字母、数字、连字符和下划线。"
-done
-
-while true; do
-    read -r -s -p "密码: " PASSWORD
-    echo
-    read -r -s -p "确认密码: " PASSWORD_CONFIRM
-    echo
-    if [[ "${PASSWORD}" == "${PASSWORD_CONFIRM}" ]] && [[ -n "${PASSWORD}" ]]; then
-        break
-    fi
-    echo "两次密码不一致或密码为空，请重试。"
-done
-
-pkexec useradd -m -G wheel -s /usr/bin/fish "${USERNAME}"
-printf '%s:%s' "${USERNAME}" "${PASSWORD}" | pkexec chpasswd
-
-echo "用户 '${USERNAME}' 创建成功。"
-pkexec touch /var/.oobe-done
-read -r -s -n 1 -p "按任意键继续..."
-echo
-EOF
-
-chmod +x /usr/bin/oobe-wizard
-
 # --- polkit ---
 mkdir -p /usr/share/polkit-1/rules.d
 
@@ -79,7 +44,7 @@ polkit.addRule(function(action, subject) {
     if (action.id == "org.freedesktop.policykit.exec" &&
         subject.isInGroup("oobe")) {
         var program = action.lookup("program");
-        if (program == "/usr/sbin/useradd" || program == "/usr/bin/chpasswd" || program == "/usr/bin/touch") {
+        if (program == "/usr/bin/useradd" || program == "/usr/bin/chpasswd" || program == "/usr/bin/touch" || program == "/usr/bin/hostnamectl" || program == "/usr/bin/oobe-set-vconsole") {
             return polkit.Result.YES;
         }
     }

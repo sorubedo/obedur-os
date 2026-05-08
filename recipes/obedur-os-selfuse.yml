@@ -22,10 +22,4 @@ modules:
       packages:
         - ayugram-desktop
 
-  - type: oobe
-    source: local
-    exec: dbus-run-session niri
-    env:
-        NIRI_CONFIG: /usr/share/obedur-dotfiles/niri/oobe.kdl
-
   - from-file: modules/finalize.yml
