@@ -35,6 +35,7 @@ modules:
         - yalter/niri-git
     install:
       packages:
+        - fuse-libs
         - fish
         - iwd
         - https://github.com/shazow/wifitui/releases/download/v0.13.0/wifitui-0.13.0-linux-x86_64.rpm
