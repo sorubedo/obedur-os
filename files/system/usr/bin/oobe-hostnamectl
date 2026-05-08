@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# oobe-hostnamectl - restricted hostnamectl wrapper for OOBE
+# Usage: oobe-hostnamectl <hostname>
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: oobe-hostnamectl <hostname>" >&2
+    exit 1
+fi
+
+HOSTNAME="$1"
+
+if [[ ! "$HOSTNAME" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$ ]]; then
+    echo "oobe-hostnamectl: invalid hostname '$HOSTNAME'" >&2
+    exit 1
+fi
+
+exec /usr/bin/hostnamectl set-hostname "$HOSTNAME"

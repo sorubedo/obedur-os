@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# oobe-useradd - restricted useradd wrapper for OOBE
+# Usage: oobe-useradd <username> <shell> [--admin]
+# Only allows creating the first human user
+set -euo pipefail
+
+if [[ $# -lt 2 ]]; then
+    echo "Usage: oobe-useradd <username> <shell> [--admin]" >&2
+    exit 1
+fi
+
+USERNAME="$1"
+SHELL="$2"
+ADMIN="${3:-}"
+
+# Validate username: lowercase, digits, -, _ only, must start with letter or underscore
+if [[ ! "$USERNAME" =~ ^[a-z_][a-z0-9_-]*$ ]]; then
+    echo "oobe-useradd: invalid username '$USERNAME'" >&2
+    exit 1
+fi
+
+# Reject reserved names
+case "$USERNAME" in
+    root|nobody|oobe|bin|daemon|adm|lp|sync|shutdown|halt|mail|operator|games|ftp|sshd|systemd-*|dbus|polkitd|rpc|rpcuser|nfsnobody|ntp|tss)
+        echo "oobe-useradd: username '$USERNAME' is reserved" >&2
+        exit 1
+        ;;
+esac
+
+# Validate shell: only allow whitelisted shells
+case "$SHELL" in
+    /usr/bin/fish|/usr/bin/bash)
+        ;;
+    *)
+        echo "oobe-useradd: invalid shell '$SHELL'" >&2
+        exit 1
+        ;;
+esac
+
+# Only allow creating the first human user — refuse if any UID >= 1000 user already exists (excluding oobe)
+while IFS=: read -r name _ uid _; do
+    if [[ "$uid" -ge 1000 && "$name" != "oobe" && "$name" != "nobody" ]]; then
+        echo "oobe-useradd: a human user already exists (deny)" >&2
+        exit 1
+    fi
+done < /etc/passwd
+
+args=(-m -s "$SHELL")
+if [[ "$ADMIN" == "--admin" ]]; then
+    args+=(-G wheel)
+elif [[ -n "$ADMIN" ]]; then
+    echo "oobe-useradd: invalid third argument, only --admin is accepted" >&2
+    exit 1
+fi
+args+=("$USERNAME")
+
+exec /usr/sbin/useradd "${args[@]}"

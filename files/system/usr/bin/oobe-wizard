@@ -50,6 +50,7 @@ STRINGS = {
         "existing_user_title": "User Detected",
         "existing_user_msg": "A human user already exists in the system.",
         "skip_prompt": "Skip user creation? (y/N)",
+        "existing_user_skip": "User creation will be skipped. Press any key to continue.",
         "too_small": "Terminal too small!",
         "footer_hint": "Confirm",
         "tty_font_title": "TTY Console Font",
@@ -96,6 +97,7 @@ STRINGS = {
         "existing_user_title": "检测到用户",
         "existing_user_msg": "系统中已存在 UID >= 1000 的普通用户。",
         "skip_prompt": "是否跳过用户创建步骤？(y/N)",
+        "existing_user_skip": "将跳过用户创建步骤。按任意键继续。",
         "too_small": "窗口太小！",
         "footer_hint": "确认",
         "tty_font_title": "TTY 控制台字体",
@@ -440,7 +442,7 @@ class OOBEApp:
         try:
             # 1. Set Hostname (skip if empty)
             if self.hostname:
-                subprocess.run(["pkexec", "hostnamectl", "set-hostname", self.hostname], check=True, capture_output=True)
+                subprocess.run(["pkexec", "/usr/bin/oobe-hostnamectl", self.hostname], check=True, capture_output=True)
 
             # 2. Set TTY Console Font
             if self.tty_font:
@@ -448,18 +450,17 @@ class OOBEApp:
 
             if not skip_user:
                 # 3. Create User
-                useradd_args = ["pkexec", "useradd", "-m", "-s", self.shell]
+                useradd_args = ["pkexec", "/usr/bin/oobe-useradd", self.username, self.shell]
                 if self.is_admin:
-                    useradd_args.extend(["-G", "wheel"])
-                useradd_args.append(self.username)
+                    useradd_args.append("--admin")
                 subprocess.run(useradd_args, check=True, capture_output=True)
 
                 # 3. Set Password
-                subprocess.run(["pkexec", "chpasswd"], input=f"{self.username}:{self.password}".encode(), check=True, capture_output=True)
+                subprocess.run(["pkexec", "/usr/bin/oobe-chpasswd", self.username], input=f"{self.username}:{self.password}".encode(), check=True, capture_output=True)
 
             # 4. Set Root Password
             if self.root_password:
-                subprocess.run(["pkexec", "chpasswd"], input=f"root:{self.root_password}".encode(), check=True, capture_output=True)
+                subprocess.run(["pkexec", "/usr/bin/oobe-chpasswd", "root"], input=f"root:{self.root_password}".encode(), check=True, capture_output=True)
 
             # 5. Cleanup oobe home directory (only if running as oobe:oobe)
             try:
@@ -477,7 +478,7 @@ class OOBEApp:
                 pass
 
             # 6. Mark Done
-            subprocess.run(["pkexec", "touch", "/var/.oobe-done"], check=True, capture_output=True)
+            subprocess.run(["pkexec", "/usr/bin/oobe-touch"], check=True, capture_output=True)
 
             return True
         except subprocess.CalledProcessError as e:
@@ -487,9 +488,11 @@ class OOBEApp:
 
     def check_existing_users(self):
         try:
-            for p in pwd.getpwall():
-                if p.pw_uid >= 1000 and p.pw_name not in ("nobody", "oobe"):
-                    return True
+            with open("/etc/passwd") as f:
+                for line in f:
+                    name, _, uid, _ = line.split(":", 3)
+                    if int(uid) >= 1000 and name not in ("nobody", "oobe"):
+                        return True
         except Exception:
             pass
         return False
@@ -499,14 +502,8 @@ class OOBEApp:
 
         skip_user = False
         if self.check_existing_users():
-            while True:
-                win, y, x, h, w = self.draw_box(self.t("existing_user_title"), [self.t("existing_user_msg"), "", self.t("skip_prompt")])
-                ch = win.getch()
-                if ch == curses.KEY_RESIZE:
-                    continue
-                if ch in (ord('y'), ord('Y')):
-                    skip_user = True
-                break
+            skip_user = True
+            self.message_box(self.t("existing_user_title"), [self.t("existing_user_msg"), "", self.t("existing_user_skip")])
 
         self.show_welcome()
 
@@ -519,7 +516,7 @@ class OOBEApp:
         self.hostname = self.get_input(
             self.t("hostname_title"),
             self.t("hostname_prompt"),
-            validator=lambda s: not s or re.match(r"^[a-zA-Z0-9-]{1,63}$", s),
+            validator=lambda s: not s or re.match(r"^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$", s),
             error_msg=self.t("invalid_host"),
             default=current_host
         )

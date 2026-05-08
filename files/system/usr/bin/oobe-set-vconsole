@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
-set -e
+# oobe-set-vconsole - restricted vconsole font configurator for OOBE
+# Usage: oobe-set-vconsole <font-name>
+set -euo pipefail
 
-FONT="$1"
-if [ -z "$FONT" ]; then
+FONT="${1:-}"
+
+if [[ $# -lt 1 || -z "$FONT" ]]; then
     echo "Usage: oobe-set-vconsole <font-name>" >&2
+    exit 1
+fi
+
+# Validate font name: alphanumeric, hyphens, underscores only
+if [[ ! "$FONT" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]*$ ]]; then
+    echo "oobe-set-vconsole: invalid font name '$FONT'" >&2
     exit 1
 fi
 

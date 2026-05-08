@@ -44,7 +44,11 @@ polkit.addRule(function(action, subject) {
     if (action.id == "org.freedesktop.policykit.exec" &&
         subject.isInGroup("oobe")) {
         var program = action.lookup("program");
-        if (program == "/usr/bin/useradd" || program == "/usr/bin/chpasswd" || program == "/usr/bin/touch" || program == "/usr/bin/hostnamectl" || program == "/usr/bin/oobe-set-vconsole") {
+        if (program == "/usr/bin/oobe-useradd" ||
+            program == "/usr/bin/oobe-chpasswd" ||
+            program == "/usr/bin/oobe-hostnamectl" ||
+            program == "/usr/bin/oobe-touch" ||
+            program == "/usr/bin/oobe-set-vconsole") {
             return polkit.Result.YES;
         }
     }

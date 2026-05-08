@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# oobe-chpasswd - restricted chpasswd wrapper for OOBE
+# Usage: oobe-chpasswd <username>
+# stdin: <username>:<password>
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: oobe-chpasswd <username>" >&2
+    echo "stdin: <username>:<password>" >&2
+    exit 1
+fi
+
+TARGET="$1"
+
+# 1. Validate target exists and is root or UID >= 1000
+uid=$(id -u "$TARGET" 2>/dev/null) || {
+    echo "oobe-chpasswd: user '$TARGET' does not exist" >&2
+    exit 1
+}
+if [[ "$TARGET" != "root" && "$uid" -lt 1000 ]]; then
+    echo "oobe-chpasswd: cannot change password for system user '$TARGET' (UID=$uid)" >&2
+    exit 1
+fi
+
+# 2. Refuse if account already has a password
+pw=$(awk -F: -v u="$TARGET" '$1 == u {print $2}' /etc/shadow)
+if [[ "$pw" == \$* ]]; then
+    echo "oobe-chpasswd: user '$TARGET' already has a password set" >&2
+    exit 1
+fi
+
+# 3. Read stdin and verify the username in the input matches TARGET
+IFS= read -r line
+stdin_user="${line%%:*}"
+if [[ "$stdin_user" != "$TARGET" ]]; then
+    echo "oobe-chpasswd: stdin user '$stdin_user' != target '$TARGET'" >&2
+    exit 1
+fi
+printf '%s\n' "$line" | /usr/sbin/chpasswd
