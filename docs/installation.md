@@ -167,4 +167,16 @@ cosign verify --key cosign.pub ghcr.io/sorubedo/obedur-os
 
 ## ISO 安装
 
-在已有的 Fedora Atomic 系统上可生成离线 ISO 用于全新安装。详见 [BlueBuild ISO 指南](https://blue-build.org/how-to/generate-iso/)。ISO 体积较大，需使用其他平台托管分发。
+在已有的 Fedora Atomic 系统上可生成离线 ISO 用于全新安装。
+
+```bash
+sudo bluebuild generate-iso --iso-name obedur-os.iso --secure-boot-url https://github.com/sorubedo/obedur-os/raw/refs/heads/main/MOK.der --enrollment-password obedur image ghcr.io/sorubedo/obedur-os:latest
+```
+
+如需要在安装时创建用户或设置 root 密码，添加 `--variant Sericea`：
+
+```bash
+sudo bluebuild generate-iso --iso-name obedur-os.iso --variant Sericea --secure-boot-url https://github.com/sorubedo/obedur-os/raw/refs/heads/main/MOK.der --enrollment-password obedur image ghcr.io/sorubedo/obedur-os:latest
+```
+
+> ISO 体积较大，需使用其他平台托管分发。详见 [BlueBuild ISO 指南](https://blue-build.org/how-to/generate-iso/)。

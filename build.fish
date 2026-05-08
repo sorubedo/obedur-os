@@ -1,3 +1,2 @@
 #!/usr/bin/env fish
-set -gx MOK_PRIVATE_KEY (cat MOK.priv | string collect)
-sudo --preserve-env=MOK_PRIVATE_KEY bluebuild generate-iso --iso-name obedur-os.iso recipe recipes/obedur-os.yml
+sudo bluebuild generate-iso --iso-name obedur-os.iso --secure-boot-url https://github.com/sorubedo/obedur-os/raw/refs/heads/main/MOK.der --enrollment-password obedur image ghcr.io/sorubedo/obedur-os:latest
