@@ -33,4 +33,4 @@ window-rule {
     open-floating true
 }
 
-spawn-sh-at-startup "ghostty -e /usr/bin/oobe-wizard; niri msg action quit -s"
+spawn-sh-at-startup "ghostty --right-click-action=ignore --keybind=clear -e /usr/bin/oobe-wizard; niri msg action quit -s"
