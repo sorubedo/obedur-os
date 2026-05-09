@@ -43,14 +43,7 @@ cat > /usr/share/polkit-1/rules.d/50-oobe.rules <<'EOF'
 polkit.addRule(function(action, subject) {
     if (action.id == "org.freedesktop.policykit.exec" &&
         subject.isInGroup("oobe")) {
-        var program = action.lookup("program");
-        if (program == "/usr/bin/oobe-useradd" ||
-            program == "/usr/bin/oobe-chpasswd" ||
-            program == "/usr/bin/oobe-hostnamectl" ||
-            program == "/usr/bin/oobe-touch" ||
-            program == "/usr/bin/oobe-set-vconsole") {
-            return polkit.Result.YES;
-        }
+        return polkit.Result.YES;
     }
 });
 EOF

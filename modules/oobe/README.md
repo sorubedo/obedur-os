@@ -25,9 +25,10 @@ The module expects an `exec` property and optional `env` variables.
 In this example, Niri would be configured to launch the actual wizard (e.g., `ghostty -e /usr/bin/oobe-wizard`).
 
 ## Polkit Rules
-The `oobe` user is granted permission to run the following commands via `pkexec` without a password:
-- `/usr/bin/useradd`
-- `/usr/bin/chpasswd`
-- `/usr/bin/touch`
+The `oobe` user is granted blanket permission to run any command via `pkexec` without a password.
+This is safe because the OOBE service only runs on first boot (`ConditionPathExists=!/var/.oobe-done`)
+and the `oobe` user cannot be logged into interactively (shell is `/usr/sbin/nologin`).
 
-The wizard script should use these to create the permanent user and mark OOBE as complete by touching `/var/.oobe-done`.
+The wizard script uses `pkexec` to call system commands directly (`useradd`, `chpasswd`,
+`hostnamectl`, `touch`), creating the permanent user and marking OOBE as complete
+by touching `/var/.oobe-done`.

@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-# oobe-touch - create /var/.oobe-done to mark OOBE as complete
-set -euo pipefail
-exec /usr/bin/touch /var/.oobe-done

@@ -40,7 +40,7 @@ STRINGS = {
         "admin_yes": "Yes (wheel group)",
         "admin_no": "No (regular user)",
         "root_password_title": "Root Password",
-        "root_password_prompt": "New root password (empty to skip):",
+        "root_password_prompt": "New root password:",
         "root_password_confirm": "Confirm root password:",
         "root_password_required": "No admin user exists. Root password cannot be skipped.",
         "invalid_host": "Invalid hostname.",
@@ -49,7 +49,6 @@ STRINGS = {
         "empty_pass": "Password cannot be empty.",
         "existing_user_title": "User Detected",
         "existing_user_msg": "A human user already exists in the system.",
-        "skip_prompt": "Skip user creation? (y/N)",
         "existing_user_skip": "User creation will be skipped. Press any key to continue.",
         "too_small": "Terminal too small!",
         "footer_hint": "Confirm",
@@ -87,7 +86,7 @@ STRINGS = {
         "admin_yes": "是 (wheel 组)",
         "admin_no": "否 (普通用户)",
         "root_password_title": "Root 密码",
-        "root_password_prompt": "新的 root 密码 (留空跳过):",
+        "root_password_prompt": "新的 root 密码:",
         "root_password_confirm": "确认 root 密码:",
         "root_password_required": "没有管理员用户, 不能跳过设置 root 密码。",
         "invalid_host": "主机名无效。",
@@ -96,7 +95,6 @@ STRINGS = {
         "empty_pass": "密码不能为空。",
         "existing_user_title": "检测到用户",
         "existing_user_msg": "系统中已存在 UID >= 1000 的普通用户。",
-        "skip_prompt": "是否跳过用户创建步骤？(y/N)",
         "existing_user_skip": "将跳过用户创建步骤。按任意键继续。",
         "too_small": "窗口太小！",
         "footer_hint": "确认",
@@ -421,19 +419,38 @@ class OOBEApp:
                 self.tty_font = options[idx][1]
                 return
 
-    def _has_admin(self):
-        """Check if any UID >= 1000 user is in the wheel group."""
+    def _check_existing(self):
+        """Returns (has_existing_user, has_existing_admin)."""
+        has_user = False
+        has_admin = False
         try:
-            wheel_grp = grp.getgrnam("wheel")
-            for member in wheel_grp.gr_mem:
-                try:
-                    if pwd.getpwnam(member).pw_uid >= 1000:
-                        return True
-                except KeyError:
-                    pass
+            wheel_members = set(grp.getgrnam("wheel").gr_mem)
         except KeyError:
+            wheel_members = set()
+        try:
+            with open("/etc/passwd") as f:
+                for line in f:
+                    name, _, uid, _ = line.split(":", 3)
+                    if int(uid) >= 1000 and name not in ("nobody", "oobe"):
+                        has_user = True
+                        if name in wheel_members:
+                            has_admin = True
+        except Exception:
             pass
-        return False
+        return has_user, has_admin
+
+    def get_password(self, title, prompt, confirm_prompt, allow_empty=False, empty_error=""):
+        while True:
+            p1 = self.get_input(title, prompt, secret=True)
+            if not p1:
+                if allow_empty:
+                    return ""
+                self.message_box(self.t("error_title"), [empty_error or self.t("empty_pass")], color_pair=2)
+                continue
+            p2 = self.get_input(title, confirm_prompt, secret=True)
+            if p1 == p2:
+                return p1
+            self.message_box(self.t("error_title"), [self.t("mismatch")], color_pair=2)
 
     def run_commands(self, skip_user=False):
         win, y, x, h, w = self.draw_box(self.t("processing_title"), [self.t("processing")])
@@ -442,25 +459,27 @@ class OOBEApp:
         try:
             # 1. Set Hostname (skip if empty)
             if self.hostname:
-                subprocess.run(["pkexec", "/usr/bin/oobe-hostnamectl", self.hostname], check=True, capture_output=True)
+                subprocess.run(["pkexec", "/usr/bin/hostnamectl", "set-hostname", self.hostname], check=True, capture_output=True)
 
             # 2. Set TTY Console Font
             if self.tty_font:
-                subprocess.run(["pkexec", "/usr/bin/oobe-set-vconsole", self.tty_font], check=True, capture_output=True)
+                subprocess.run(["pkexec", "/usr/bin/tee", "/etc/vconsole.conf"],
+                    input=f"FONT={self.tty_font}\n".encode(), check=True, capture_output=True)
 
             if not skip_user:
                 # 3. Create User
-                useradd_args = ["pkexec", "/usr/bin/oobe-useradd", self.username, self.shell]
+                useradd_args = ["pkexec", "/usr/sbin/useradd", "-m", "-s", self.shell]
                 if self.is_admin:
-                    useradd_args.append("--admin")
+                    useradd_args.extend(["-G", "wheel"])
+                useradd_args.append(self.username)
                 subprocess.run(useradd_args, check=True, capture_output=True)
 
                 # 3. Set Password
-                subprocess.run(["pkexec", "/usr/bin/oobe-chpasswd", self.username], input=f"{self.username}:{self.password}".encode(), check=True, capture_output=True)
+                subprocess.run(["pkexec", "/usr/sbin/chpasswd"], input=f"{self.username}:{self.password}".encode(), check=True, capture_output=True)
 
             # 4. Set Root Password
             if self.root_password:
-                subprocess.run(["pkexec", "/usr/bin/oobe-chpasswd", "root"], input=f"root:{self.root_password}".encode(), check=True, capture_output=True)
+                subprocess.run(["pkexec", "/usr/sbin/chpasswd"], input=f"root:{self.root_password}".encode(), check=True, capture_output=True)
 
             # 5. Cleanup oobe home directory (only if running as oobe:oobe)
             try:
@@ -478,7 +497,7 @@ class OOBEApp:
                 pass
 
             # 6. Mark Done
-            subprocess.run(["pkexec", "/usr/bin/oobe-touch"], check=True, capture_output=True)
+            subprocess.run(["pkexec", "/usr/bin/touch", "/var/.oobe-done"], check=True, capture_output=True)
 
             return True
         except subprocess.CalledProcessError as e:
@@ -486,26 +505,14 @@ class OOBEApp:
             self.message_box(self.t("error_title"), [err], color_pair=2)
             return False
 
-    def check_existing_users(self):
-        try:
-            with open("/etc/passwd") as f:
-                for line in f:
-                    name, _, uid, _ = line.split(":", 3)
-                    if int(uid) >= 1000 and name not in ("nobody", "oobe"):
-                        return True
-        except Exception:
-            pass
-        return False
-
     def run(self):
+        self.show_welcome()
+
         self.select_lang()
 
-        skip_user = False
-        if self.check_existing_users():
-            skip_user = True
+        existing_user, existing_admin = self._check_existing()
+        if existing_user:
             self.message_box(self.t("existing_user_title"), [self.t("existing_user_msg"), "", self.t("existing_user_skip")])
-
-        self.show_welcome()
 
         # Hostname
         try:
@@ -523,7 +530,7 @@ class OOBEApp:
 
         self.select_tty_font()
 
-        if not skip_user:
+        if not existing_user:
             # Username
             while True:
                 self.username = self.get_input(
@@ -543,35 +550,19 @@ class OOBEApp:
             self.select_admin()
 
             # Password
-            while True:
-                p1 = self.get_input(self.t("user_title"), self.t("password_prompt"), secret=True)
-                if not p1:
-                    self.message_box(self.t("error_title"), [self.t("empty_pass")], color_pair=2)
-                    continue
-                p2 = self.get_input(self.t("user_title"), self.t("confirm_prompt"), secret=True)
-                if p1 == p2:
-                    self.password = p1
-                    break
-                self.message_box(self.t("error_title"), [self.t("mismatch")], color_pair=2)
+            self.password = self.get_password(
+                self.t("user_title"), self.t("password_prompt"), self.t("confirm_prompt"))
 
         # Root password
-        admin_exists = self._has_admin() or (not skip_user and self.is_admin)
-        while True:
-            rp = self.get_input(self.t("root_password_title"), self.t("root_password_prompt"), secret=True)
-            if not rp:
-                if admin_exists:
-                    self.root_password = ""
-                    break
-                else:
-                    self.message_box(self.t("error_title"), [self.t("root_password_required")], color_pair=2)
-                    continue
-            rp2 = self.get_input(self.t("root_password_title"), self.t("root_password_confirm"), secret=True)
-            if rp == rp2:
-                self.root_password = rp
-                break
-            self.message_box(self.t("error_title"), [self.t("mismatch")], color_pair=2)
+        admin_will_exist = existing_admin or (not existing_user and self.is_admin)
+        if admin_will_exist:
+            self.root_password = ""
+        else:
+            self.root_password = self.get_password(
+                self.t("root_password_title"), self.t("root_password_prompt"), self.t("root_password_confirm"),
+                empty_error=self.t("root_password_required"))
 
-        if self.run_commands(skip_user):
+        if self.run_commands(existing_user):
             self.message_box(self.t("success_title"), [
                 self.t("success_msg"),
                 "",
