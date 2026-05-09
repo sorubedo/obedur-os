@@ -4,7 +4,6 @@ import grp
 import os
 import pwd
 import re
-import shutil
 import signal
 import socket
 import subprocess
@@ -57,6 +56,14 @@ STRINGS = {
         "tty_font_v28n": "ter-v28n (1440p/4K)",
         "tty_font_v32n": "ter-v32n (4K+)",
         "tty_font_skip": "Skip (keep default)",
+        "flatpak_title": "Flatpak Setup Service",
+        "flatpak_default": "Keep default",
+        "flatpak_disable": "Disable",
+        "flatpak_enable": "Enable",
+        "mok_title": "Secure Boot MOK Enrollment",
+        "mok_skip": "Skip",
+        "mok_enroll": "Enroll MOK key (reboot required)",
+        "mok_password_prompt": "MOK password (default: obedur):",
     },
     "zh": {
         "welcome": "欢迎使用 Obedur-OS",
@@ -103,6 +110,14 @@ STRINGS = {
         "tty_font_v28n": "ter-v28n (1440p/4K)",
         "tty_font_v32n": "ter-v32n (4K+)",
         "tty_font_skip": "跳过 (保持默认)",
+        "flatpak_title": "Flatpak 服务设置",
+        "flatpak_default": "保持默认",
+        "flatpak_disable": "禁用",
+        "flatpak_enable": "启用",
+        "mok_title": "安全启动 MOK 密钥注册",
+        "mok_skip": "跳过",
+        "mok_enroll": "注册 MOK 密钥 (需重启)",
+        "mok_password_prompt": "MOK 密码 (默认: obedur):",
     }
 }
 
@@ -120,6 +135,8 @@ class OOBEApp:
         self.is_admin = True
         self.root_password = ""
         self.tty_font = None
+        self.flatpak_action = None  # None=keep default, "disable", "enable"
+        self.mok_password = ""
 
         # Colors
         curses.start_color()
@@ -224,21 +241,6 @@ class OOBEApp:
         win.refresh()
         return win, start_y, start_x, box_height, box_width
 
-    def show_welcome(self):
-        logo = [
-            r"         __             __                           ",
-            r"  ____  / /_  ___  ____/ /_  _______      ____  _____",
-            r" / __ \/ __ \/ _ \/ __  / / / / ___/_____/ __ \/ ___/",
-            r"/ /_/ / /_/ /  __/ /_/ / /_/ / /  /_____/ /_/ (__  ) ",
-            r"\____/_.___/\___/\__,_/\__,_|_/         \____/____/ "
-        ]
-        while True:
-            win, y, x, h, w = self.draw_box(self.t("welcome"), logo + ["", "Press any key to start the setup wizard..."])
-            ch = win.getch()
-            if ch == curses.KEY_RESIZE:
-                continue
-            break
-
     def get_input(self, title, prompt, secret=False, validator=None, error_msg="", default=""):
         field_width = 30
         input_str = default
@@ -302,32 +304,37 @@ class OOBEApp:
             break
 
     def select_lang(self):
+        logo = [
+            r"         __             __                           ",
+            r"  ____  / /_  ___  ____/ /_  _______      ____  _____",
+            r" / __ \/ __ \/ _ \/ __  / / / / ___/_____/ __ \/ ___/",
+            r"/ /_/ / /_/ /  __/ /_/ / /_/ / /  /_____/ /_/ (__  ) ",
+            r"\____/_.___/\___/\__,_/\__,_|_/         \____/____/ "
+        ]
         options = [("简体中文", "zh"), ("English", "en")]
         idx = 0
         while True:
-            # Find max display width of option names to align markers
             max_n_w = max(self.get_width(n) for n, _ in options)
-            
-            lines = []
+            lang_lines = []
             for i, (name, _) in enumerate(options):
-                # Pad spaces based on display width difference
                 padding = " " * (max_n_w - self.get_width(name))
                 label = f"{name}{padding}"
                 if i == idx:
-                    lines.append(f" [*] {label} ")
+                    lang_lines.append(f" [*] {label} ")
                 else:
-                    lines.append(f" [ ] {label} ")
-            
-            win, y, x, h, w = self.draw_box(STRINGS["en"]["lang_select"], lines)
+                    lang_lines.append(f" [ ] {label} ")
+            lines = logo + [""] + lang_lines
+            win, y, x, h, w = self.draw_box(self.t("welcome"), lines)
             ch = win.getch()
             if ch == curses.KEY_RESIZE:
                 continue
             if ch == curses.KEY_UP:
                 idx = (idx - 1) % len(options)
+                self.lang = options[idx][1]
             elif ch == curses.KEY_DOWN:
                 idx = (idx + 1) % len(options)
-            elif ch in (10, 13):
                 self.lang = options[idx][1]
+            elif ch in (10, 13):
                 return
 
     def select_shell(self):
@@ -419,6 +426,89 @@ class OOBEApp:
                 self.tty_font = options[idx][1]
                 return
 
+    def select_flatpak(self):
+        options = [
+            (self.t("flatpak_default"), None),
+            (self.t("flatpak_disable"), "disable"),
+            (self.t("flatpak_enable"), "enable"),
+        ]
+        idx = 0
+        while True:
+            max_n_w = max(self.get_width(n) for n, _ in options)
+            lines = []
+            for i, (name, _) in enumerate(options):
+                padding = " " * (max_n_w - self.get_width(name))
+                label = f"{name}{padding}"
+                if i == idx:
+                    lines.append(f" [*] {label} ")
+                else:
+                    lines.append(f" [ ] {label} ")
+
+            win, y, x, h, w = self.draw_box(self.t("flatpak_title"), lines)
+            ch = win.getch()
+            if ch == curses.KEY_RESIZE:
+                continue
+            if ch == curses.KEY_UP:
+                idx = (idx - 1) % len(options)
+            elif ch == curses.KEY_DOWN:
+                idx = (idx + 1) % len(options)
+            elif ch in (10, 13):
+                self.flatpak_action = options[idx][1]
+                return
+
+    def _check_sb(self):
+        """Returns True if Secure Boot is enabled and MOK.der is present but not yet enrolled."""
+        if not os.path.isdir("/sys/firmware/efi"):
+            return False
+        try:
+            sb = subprocess.run(["mokutil", "--sb-state"], capture_output=True, text=True)
+            if "SecureBoot enabled" not in sb.stdout:
+                return False
+        except Exception:
+            return False
+        if not os.path.isfile("/usr/share/cert/MOK.der"):
+            return False
+        try:
+            fp_result = subprocess.run(
+                ["openssl", "x509", "-in", "/usr/share/cert/MOK.der", "-fingerprint", "-sha256", "-noout"],
+                capture_output=True, text=True)
+            enrolled = subprocess.run(["mokutil", "--list-enrolled"], capture_output=True, text=True)
+            if fp_result.returncode == 0 and enrolled.returncode == 0:
+                fp = fp_result.stdout.strip().split("=", 1)[1].strip().replace(":", "").lower()
+                if fp and fp in enrolled.stdout.replace(":", "").lower():
+                    return False
+        except Exception:
+            pass
+        return True
+
+    def select_mok(self):
+        options = [
+            (self.t("mok_skip"), False),
+            (self.t("mok_enroll"), True),
+        ]
+        idx = 0
+        while True:
+            max_n_w = max(self.get_width(n) for n, _ in options)
+            lines = []
+            for i, (name, _) in enumerate(options):
+                padding = " " * (max_n_w - self.get_width(name))
+                label = f"{name}{padding}"
+                if i == idx:
+                    lines.append(f" [*] {label} ")
+                else:
+                    lines.append(f" [ ] {label} ")
+
+            win, y, x, h, w = self.draw_box(self.t("mok_title"), lines)
+            ch = win.getch()
+            if ch == curses.KEY_RESIZE:
+                continue
+            if ch == curses.KEY_UP:
+                idx = (idx - 1) % len(options)
+            elif ch == curses.KEY_DOWN:
+                idx = (idx + 1) % len(options)
+            elif ch in (10, 13):
+                return options[idx][1]
+
     def _check_existing(self):
         """Returns (has_existing_user, has_existing_admin)."""
         has_user = False
@@ -467,37 +557,35 @@ class OOBEApp:
                     f"if grep -q '^FONT=' /etc/vconsole.conf; then sed -i 's/^FONT=.*/FONT={self.tty_font}/' /etc/vconsole.conf; else printf 'FONT=%s\\n' {self.tty_font} >> /etc/vconsole.conf; fi"],
                     check=True, capture_output=True)
 
+            # 3. Flatpak Setup Service
+            if self.flatpak_action:
+                action = self.flatpak_action
+                subprocess.run(["pkexec", "/usr/bin/systemctl", action, "--now", "system-flatpak-setup.timer"], check=True, capture_output=True)
+                subprocess.run(["pkexec", "/usr/bin/systemctl", action, "--global", "user-flatpak-setup.timer"], check=True, capture_output=True)
+
             if not skip_user:
-                # 3. Create User
+                # 4. Create User
                 useradd_args = ["pkexec", "/usr/sbin/useradd", "-m", "-s", self.shell]
                 if self.is_admin:
                     useradd_args.extend(["-G", "wheel"])
                 useradd_args.append(self.username)
                 subprocess.run(useradd_args, check=True, capture_output=True)
 
-                # 3. Set Password
+                # 5. Set Password
                 subprocess.run(["pkexec", "/usr/sbin/chpasswd"], input=f"{self.username}:{self.password}".encode(), check=True, capture_output=True)
 
-            # 4. Set Root Password
+            # 6. Set Root Password
             if self.root_password:
                 subprocess.run(["pkexec", "/usr/sbin/chpasswd"], input=f"root:{self.root_password}".encode(), check=True, capture_output=True)
 
-            # 5. Cleanup oobe home directory (only if running as oobe:oobe)
-            try:
-                oobe_pw = pwd.getpwnam("oobe")
-                if os.getuid() == oobe_pw.pw_uid and os.getgid() == oobe_pw.pw_gid:
-                    home = oobe_pw.pw_dir
-                    if os.path.isdir(home):
-                        for name in os.listdir(home):
-                            path = os.path.join(home, name)
-                            if os.path.isdir(path) and not os.path.islink(path):
-                                shutil.rmtree(path)
-                            else:
-                                os.unlink(path)
-            except Exception:
-                pass
+            # 7. MOK Enrollment
+            if self.mok_password:
+                subprocess.run(
+                    ["pkexec", "/usr/bin/mokutil", "--import", "/usr/share/cert/MOK.der"],
+                    input=f"{self.mok_password}\n{self.mok_password}\n".encode(),
+                    check=True, capture_output=True)
 
-            # 6. Mark Done
+            # 8. Mark Done
             subprocess.run(["pkexec", "/usr/bin/touch", "/var/.oobe-done"], check=True, capture_output=True)
 
             return True
@@ -507,8 +595,6 @@ class OOBEApp:
             return False
 
     def run(self):
-        self.show_welcome()
-
         self.select_lang()
 
         existing_user, existing_admin = self._check_existing()
@@ -530,6 +616,12 @@ class OOBEApp:
         )
 
         self.select_tty_font()
+
+        self.select_flatpak()
+
+        if self._check_sb() and self.select_mok():
+            self.mok_password = self.get_input(
+                self.t("mok_title"), self.t("mok_password_prompt"), default="obedur")
 
         if not existing_user:
             # Username
