@@ -457,9 +457,6 @@ class OOBEApp:
                 return
 
     def _check_sb(self):
-        """Returns True if Secure Boot is enabled and MOK.der is present but not yet enrolled."""
-        if not os.path.isdir("/sys/firmware/efi"):
-            return False
         try:
             sb = subprocess.run(["mokutil", "--sb-state"], capture_output=True, text=True)
             if "SecureBoot enabled" not in sb.stdout:
@@ -469,14 +466,11 @@ class OOBEApp:
         if not os.path.isfile("/usr/share/cert/MOK.der"):
             return False
         try:
-            fp_result = subprocess.run(
-                ["openssl", "x509", "-in", "/usr/share/cert/MOK.der", "-fingerprint", "-sha256", "-noout"],
+            result = subprocess.run(
+                ["pkexec", "/usr/bin/mokutil", "--test-key", "/usr/share/cert/MOK.der"],
                 capture_output=True, text=True)
-            enrolled = subprocess.run(["mokutil", "--list-enrolled"], capture_output=True, text=True)
-            if fp_result.returncode == 0 and enrolled.returncode == 0:
-                fp = fp_result.stdout.strip().split("=", 1)[1].strip().replace(":", "").lower()
-                if fp and fp in enrolled.stdout.replace(":", "").lower():
-                    return False
+            if result.returncode != 0:
+                return False
         except Exception:
             pass
         return True
