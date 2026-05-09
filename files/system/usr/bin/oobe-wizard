@@ -457,23 +457,15 @@ class OOBEApp:
                 return
 
     def _check_sb(self):
-        try:
-            sb = subprocess.run(["mokutil", "--sb-state"], capture_output=True, text=True)
-            if "SecureBoot enabled" not in sb.stdout:
-                return False
-        except Exception:
-            return False
         if not os.path.isfile("/usr/share/cert/MOK.der"):
             return False
         try:
             result = subprocess.run(
                 ["pkexec", "/usr/bin/mokutil", "--test-key", "/usr/share/cert/MOK.der"],
                 capture_output=True, text=True)
-            if result.returncode != 0:
-                return False
+            return result.returncode == 0
         except Exception:
-            pass
-        return True
+            return False
 
     def select_mok(self):
         options = [
