@@ -29,6 +29,16 @@ input {
     }
 }
 
+gestures {
+    hot-corners {
+        off
+    }
+}
+
+recent-windows {
+    off
+}
+
 window-rule {
     open-floating true
 }
