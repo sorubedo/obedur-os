@@ -24,9 +24,16 @@ modules:
       packages:
         - ayugram-desktop
         - Sunshine
+        - input-remapper
 
   - type: script
     snippets:
       - "setcap cap_sys_admin+p $(readlink -f $(which sunshine))"
+
+
+  - type: systemd
+    system:
+      enabled:
+        - input-remapper.service
 
   - from-file: modules/finalize.yml
