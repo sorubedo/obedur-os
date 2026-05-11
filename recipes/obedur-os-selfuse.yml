@@ -17,9 +17,16 @@ modules:
 
   - type: dnf
     repos:
+      copr:
+        - lizardbyte/beta
       nonfree: rpmfusion
     install:
       packages:
         - ayugram-desktop
+        - Sunshine
+
+  - type: script
+    snippets:
+      - "setcap cap_sys_admin+p $(readlink -f $(which sunshine))"
 
   - from-file: modules/finalize.yml
