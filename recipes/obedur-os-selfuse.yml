@@ -19,21 +19,21 @@ modules:
     repos:
       copr:
         - lizardbyte/beta
+        - alternateved/keyd
       nonfree: rpmfusion
     install:
       packages:
         - ayugram-desktop
         - Sunshine
-        - input-remapper
+        - keyd
 
   - type: script
     snippets:
       - "setcap cap_sys_admin+p $(readlink -f $(which sunshine))"
 
-
   - type: systemd
     system:
       enabled:
-        - input-remapper.service
+        - keyd.service
 
   - from-file: modules/finalize.yml
