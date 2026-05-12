@@ -11,6 +11,14 @@ modules:
 
   - from-file: modules/cachyos-kernel-nvidia.yml
 
+  - type: dnf
+    repos:
+      copr:
+        - sorubedo/niri-pull3800-git
+  - type: script
+    snippets:
+      - 'echo "priority=1" | sudo tee -a /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:sorubedo/niri-pull3800-git.repo'
+
   - from-file: modules/core.yml
 
   - from-file: modules/cachyos-extras.yml

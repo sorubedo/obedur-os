@@ -27,12 +27,19 @@ modules:
   - type: dnf
     repos:
       copr:
+        - yalter/niri-git
+  - type: script
+    snippets:
+      - 'echo "priority=10" | sudo tee -a /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:yalter:niri-git.repo'
+
+  - type: dnf
+    repos:
+      copr:
         - atim/starship
         - atim/resources
         - leloubil/wl-clip-persist
         - lemmy/favorites
         - yselkowitz/nwg-shell
-        - yalter/niri-git
     install:
       packages:
         - fuse-libs
@@ -48,7 +55,7 @@ modules:
         - fastfetch
         - tuigreet
         - noctalia-shell
-        - "niri-0.0.git*"
+        - niri
         - ghostty
         - grim
         - slurp
@@ -137,4 +144,3 @@ modules:
     exec: dbus-run-session niri
     env:
       NIRI_CONFIG: /usr/share/obedur-dotfiles/niri/oobe.kdl
-
