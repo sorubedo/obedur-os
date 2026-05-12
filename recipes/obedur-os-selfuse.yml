@@ -17,7 +17,7 @@ modules:
         - sorubedo/niri-pull3800-git
   - type: script
     snippets:
-      - 'echo "priority=1" | sudo tee -a /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:sorubedo/niri-pull3800-git.repo'
+      - 'echo "priority=1" | sudo tee -a /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:sorubedo:niri-pull3800-git.repo'
 
   - from-file: modules/core.yml
 
