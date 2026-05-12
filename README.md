@@ -22,8 +22,6 @@
 | **`obedur-os-nvidia`** | NVIDIA 显卡 |
 | **`obedur-os-selfuse`** | 自用版（额外软件包） |
 
-> 全部基于 `fedora-base`。NVIDIA 驱动由 CachyOS 内核模块提供，无需区分闭源/开源版本。
-
 ## 快速安装
 
 以下以标准版为例，NVIDIA 用户替换镜像名即可。详细步骤请参阅 [安装指南](https://sorubedo.github.io/obedur-os/installation/)。
