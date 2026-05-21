@@ -35,7 +35,6 @@ modules:
         - ayugram-desktop
         - Sunshine
         - keyd
-        - prismlauncher
 
   - type: script
     snippets:
